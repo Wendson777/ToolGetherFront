@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TextInput,
   Pressable,
@@ -12,10 +13,18 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function Register() {
   return (
     <View style={styles.conteiner}>
+      <View style={styles.conteinerLogo}>
+        <Image
+          source={require("../../../assets/Logo.png")}
+          resizeMode="contain"
+          style={styles.image}
+        />
+      </View>
       <View style={styles.conteiner1}>
         <Text style={styles.formTitle}>Cadastre-se</Text>
 
         <StatusBar style="auto" />
+
         <View style={styles.conteinerInput}>
           <TextInput
             style={styles.formInput}
@@ -30,27 +39,40 @@ export default function Register() {
             autoCapitalize="none"
             secureTextEntry
           />
+
+          <TextInput
+            style={styles.formInput}
+            placeholder="Digite seu endereço..."
+            autoCapitalize="none"
+            secureTextEntry
+          />
+
+          <TextInput
+            style={styles.formInput}
+            placeholder="Digite seu telefone..."
+            autoCapitalize="none"
+            secureTextEntry
+          />
         </View>
-      </View>
+        <View style={styles.conteiner2}>
+          <TouchableOpacity style={styles.formButton}>
+            <Text style={styles.textButoon}>Entrar</Text>
+          </TouchableOpacity>
+          <Text style={{ textAlign: "center" }}>Acessar com</Text>
+          <View style={styles.containerSocial}>
+            <Pressable style={styles.socialButton}>
+              <FontAwesome name="google" size={24} color="white" />
+            </Pressable>
 
-      <View style={styles.conteiner2}>
-        <TouchableOpacity style={styles.formButton}>
-          <Text style={styles.textButoon}>Entrar</Text>
-        </TouchableOpacity>
-        <Text style={{ textAlign: "center" }}>Acessar com</Text>
-        <View style={styles.containerSocial}>
-          <Pressable style={styles.socialButton}>
-            <FontAwesome name="google" size={24} color="white" />
-          </Pressable>
-
-          <Pressable
-            style={[
-              styles.socialButton,
-              { backgroundColor: "#3b5998", marginLeft: 10 },
-            ]}
-          >
-            <FontAwesome name="facebook" size={24} color="white" />
-          </Pressable>
+            <Pressable
+              style={[
+                styles.socialButton,
+                { backgroundColor: "#3b5998", marginLeft: 10 },
+              ]}
+            >
+              <FontAwesome name="facebook" size={24} color="white" />
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>
@@ -60,21 +82,24 @@ export default function Register() {
 const styles = StyleSheet.create({
   conteiner: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#05419A",
   },
   conteiner1: {
     alignItems: "center",
     justifyContent: "flex-end",
     flex: 1,
+    backgroundColor: "white",
+    borderRadius: 25,
   },
   conteiner2: {
     alignItems: "center",
     flex: 1,
     paddingTop: 30,
+    width: "100%",
   },
   formTitle: {
     fontSize: 36,
-    color: "blue",
+    color: "#05419A",
     margin: 10,
   },
   conteinerInput: {
@@ -84,7 +109,7 @@ const styles = StyleSheet.create({
   },
   formInput: {
     borderWidth: 1, // largura da borda
-    borderColor: "blue", // cor da borda
+    borderColor: "#05419A", // cor da borda
     borderRadius: 10, // bordas arredondadas (opcional)
     padding: 10, // espaço interno
     marginVertical: 5, // espaço entre os inputs
@@ -92,8 +117,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   formButton: {
-    backgroundColor: "blue",
-    width: "80%",
+    backgroundColor: "#05419A",
+    width: "90%",
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -126,7 +151,18 @@ const styles = StyleSheet.create({
   },
   textSingUp: {
     textDecorationLine: "underline",
-    color: "blue",
+    color: "#05419A",
     fontSize: 15,
+  },
+  header: {
+    width: "100%",
+    height: "30%",
+  },
+  conteinerLogo: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: "45%",
   },
 });
