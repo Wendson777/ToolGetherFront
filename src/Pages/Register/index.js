@@ -12,20 +12,20 @@ import { FontAwesome } from "@expo/vector-icons";
 
 export default function Register() {
   return (
-    <View style={styles.conteiner}>
-      <View style={styles.conteinerLogo}>
+    <View style={styles.container}>
+      <View style={styles.containerLogo}>
         <Image
           source={require("../../../assets/Logo.png")}
           resizeMode="contain"
           style={styles.image}
         />
       </View>
-      <View style={styles.conteiner1}>
+      <View style={styles.container1}>
         <Text style={styles.formTitle}>Cadastre-se</Text>
 
         <StatusBar style="auto" />
 
-        <View style={styles.conteinerInput}>
+        <View style={styles.containerInput}>
           <TextInput
             style={styles.formInput}
             placeholder="Digite seu e-mail..."
@@ -54,9 +54,10 @@ export default function Register() {
             secureTextEntry
           />
         </View>
-        <View style={styles.conteiner2}>
+
+        <View style={styles.container2}>
           <TouchableOpacity style={styles.formButton}>
-            <Text style={styles.textButoon}>Entrar</Text>
+            <Text style={styles.textButton}>Entrar</Text>
           </TouchableOpacity>
           <Text style={{ textAlign: "center" }}>Acessar com</Text>
           <View style={styles.containerSocial}>
@@ -80,20 +81,23 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
-  conteiner: {
+  container: {
     flex: 1,
     backgroundColor: "#05419A",
   },
-  conteiner1: {
+  container1: {
     alignItems: "center",
     justifyContent: "flex-end",
     flex: 1,
+    // display: "flex",
     backgroundColor: "white",
     borderRadius: 25,
+
   },
-  conteiner2: {
+  container2: {
+    display: "flex",
     alignItems: "center",
-    flex: 1,
+    // flex: 1,
     paddingTop: 30,
     width: "100%",
   },
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
     color: "#05419A",
     margin: 10,
   },
-  conteinerInput: {
+  containerInput: {
     alignItems: "center",
     width: "100%",
     gap: 20,
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
-  textButoon: {
+  textButton: {
     color: "white",
     fontSize: 22,
     fontWeight: "bold",
@@ -142,27 +146,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  singUp: {
-    width: "100%",
-    alignItems: "flex-end",
-    // backgroundColor: "green",
-    marginTop: 20,
-    paddingEnd: 20,
-  },
-  textSingUp: {
-    textDecorationLine: "underline",
-    color: "#05419A",
-    fontSize: 15,
-  },
   header: {
     width: "100%",
     height: "30%",
   },
-  conteinerLogo: {
+  containerLogo: {
     alignItems: "center",
     justifyContent: "center",
   },
   image: {
-    width: "45%",
+    width: "35%",
   },
 });
