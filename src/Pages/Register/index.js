@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default function Login({ navigation }) {
+export default function Register() {
   return (
     <View style={styles.conteiner}>
       <View style={styles.conteiner1}>
-        <Text style={styles.formTitle}>Entre na sua conta</Text>
+        <Text style={styles.formTitle}>Cadastre-se</Text>
 
         <StatusBar style="auto" />
         <View style={styles.conteinerInput}>
@@ -32,13 +32,6 @@ export default function Login({ navigation }) {
           />
         </View>
       </View>
-
-      <Pressable
-        style={styles.Register}
-        onPress={() => navigation.navigate("Register")}
-      >
-        <Text style={styles.textRegister}>Não tem uma conta?</Text>
-      </Pressable>
 
       <View style={styles.conteiner2}>
         <TouchableOpacity style={styles.formButton}>
@@ -116,6 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
   },
+
   socialButton: {
     backgroundColor: "#DB4437", // vermelho Google
     padding: 10,
@@ -123,15 +117,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  Register: {
+  singUp: {
     width: "100%",
     alignItems: "flex-end",
+    // backgroundColor: "green",
     marginTop: 20,
     paddingEnd: 20,
   },
-  textRegister: {
+  textSingUp: {
     textDecorationLine: "underline",
     color: "blue",
-    fontSize: 16,
+    fontSize: 15,
   },
 });
