@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default function Login() {
@@ -22,9 +29,9 @@ export default function Login() {
         secureTextEntry
       />
 
-      <Pressable style={styles.formButton}>
+      <TouchableOpacity style={styles.formButton}>
         <Text style={styles.textButoon}>Entrar</Text>
-      </Pressable>
+      </TouchableOpacity>
       <Text style={{ textAlign: "center" }}>Acessar com</Text>
       <View style={styles.subContainer}>
         <Pressable style={styles.socialButton}>

@@ -4,16 +4,16 @@ import { View, Image, StyleSheet } from "react-native";
 export default function Splash({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace("Home"); // vai para Home depois de 2 segundos
-    }, 2000); // tempo em milissegundos (2000 = 2s)
+      navigation.replace("Home");
+    }, 2000);
 
-    return () => clearTimeout(timer); // limpa o timer se sair da tela
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../assets/Logo.png")} // coloque sua logo aqui
+        source={require("../../../assets/Logo.png")}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -24,12 +24,12 @@ export default function Splash({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#05419A", // cor de fundo da splash
+    backgroundColor: "#05419A",
     justifyContent: "center",
     alignItems: "center",
   },
   logo: {
-    width: 200, // largura da logo
-    height: 200, // altura da logo
+    width: 200,
+    height: 200,
   },
 });
