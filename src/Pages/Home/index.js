@@ -15,7 +15,32 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { AntDesign } from "@expo/vector-icons";
 
-export default function Actions() {
+const list = [
+  {
+    id: 1,
+    label: "Bicicleta",
+    value: "300,90",
+    date: "17/09/2025",
+    type: 0, //debito
+  },
+
+  {
+    id: 2,
+    label: "Furadeira",
+    value: "500,00",
+    date: "17/09/2025",
+    type: 1, //credito
+  },
+  {
+    id: 3,
+    label: "Martelo",
+    value: "500,00",
+    date: "17/09/2025",
+    type: 1, //credito
+  },
+];
+
+export default function Home() {
   return (
     <View style={styles.container}>
       <Header />
@@ -62,8 +87,10 @@ export default function Actions() {
       <View style={styles.ultimosItens}>
         <Text style={styles.title}>Ultimos Itens Alugados</Text>
       </View>
-      <View>
-        <Text>Baseado no que você viu</Text>
+      <View style={styles.container3}>
+        <View>
+          <Text style={styles.titleContainer3}>Baseado no que você viu</Text>
+        </View>
       </View>
     </View>
   );
@@ -78,9 +105,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#999",
     width: "90%",
     height: "30%",
+    borderRadius: 18,
   },
   title: {
     fontSize: 18,
+    marginLeft: 10,
+    marginTop: 10,
   },
   carrossel: {
     maxHeight: 84,
@@ -105,5 +135,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     textAlign: "center",
     fontWeight: "bold",
+  },
+  titleContainer3: {
+    color: "#05419A",
+    fontSize: 24,
+  },
+  container3: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    flex: 1,
+    width: "100%",
+    padding: 20,
   },
 });
