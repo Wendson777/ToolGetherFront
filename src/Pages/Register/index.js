@@ -21,7 +21,7 @@ export default function Register() {
         />
       </View>
       <View style={styles.container1}>
-        <Text style={styles.formTitle}>Cadastre-se</Text>
+          <Text style={styles.formTitle}>Cadastre-se</Text>
 
         <StatusBar style="auto" />
 
@@ -84,27 +84,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#05419A",
+    justifyContent: "flex-end"
   },
   container1: {
     alignItems: "center",
-    justifyContent: "flex-end",
-    flex: 1,
-    // display: "flex",
+    justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 25,
-
   },
   container2: {
     display: "flex",
     alignItems: "center",
-    // flex: 1,
-    paddingTop: 30,
     width: "100%",
   },
   formTitle: {
     fontSize: 36,
     color: "#05419A",
-    margin: 10,
+    margin: 20
   },
   containerInput: {
     alignItems: "center",
@@ -112,11 +108,11 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   formInput: {
-    borderWidth: 1, // largura da borda
-    borderColor: "#05419A", // cor da borda
-    borderRadius: 10, // bordas arredondadas (opcional)
-    padding: 10, // espaço interno
-    marginVertical: 5, // espaço entre os inputs
+    borderWidth: 1, 
+    borderColor: "#05419A", 
+    borderRadius: 10, 
+    padding: 10, 
+    marginVertical: 5,
     width: "90%",
     fontSize: 20,
   },
@@ -140,7 +136,7 @@ const styles = StyleSheet.create({
   },
 
   socialButton: {
-    backgroundColor: "#DB4437", // vermelho Google
+    backgroundColor: "#DB4437", 
     padding: 10,
     borderRadius: 5,
     justifyContent: "center",
@@ -155,6 +151,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   image: {
-    width: "35%",
+    width: "45%",
   },
 });
