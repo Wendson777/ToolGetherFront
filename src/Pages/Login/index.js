@@ -15,6 +15,7 @@ export default function Login({ navigation }) {
     <View style={styles.conteiner}>
       <View style={styles.conteinerLogo}>
         <Image
+          style={styles.logo}
           source={require("../../../assets/Logo.png")}
           resizeMode="contain"
         />
@@ -84,6 +85,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  logo: {
+    width: "60%",
+  },
   subConteiner: {
     // flex: 1,
     backgroundColor: "#fff",
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   textTitle: {
-    fontSize: 36,
+    fontSize: 30,
     color: "#05419A",
     margin: 25,
     // marginBottom: 30,

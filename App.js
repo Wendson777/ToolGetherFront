@@ -33,6 +33,11 @@ export default function App() {
           component={Register}
           options={{ headerShown: false }}
         />
+        {/* <Stack.Screen
+          name="Header"
+          component={Header}
+          options={{ headerShown: false }}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
