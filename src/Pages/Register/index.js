@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -7,10 +8,43 @@ import {
   TextInput,
   Pressable,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Register() {
+  const navigation = useNavigation();
+
+  // Estados para os inputs
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [adress, setAdress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  // Função para cadastrar usuário
+  const handleRegister = async () => {
+    try {
+      const response = await fetch("http://192.168.1.10:3333/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, adress, phoneNumber }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Sucesso", `Usuário criado: ${data.name}`);
+        navigation.navigate("Login"); // volta para tela de login
+      } else {
+        Alert.alert("Erro", data.message);
+      }
+    } catch (error) {
+      Alert.alert("Erro", error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerLogo}>
@@ -20,46 +54,55 @@ export default function Register() {
           style={styles.image}
         />
       </View>
-      <View style={styles.container1}>
-          <Text style={styles.formTitle}>Cadastre-se</Text>
 
+      <View style={styles.container1}>
+        <Text style={styles.formTitle}>Cadastre-se</Text>
         <StatusBar style="auto" />
 
         <View style={styles.containerInput}>
           <TextInput
             style={styles.formInput}
+            placeholder="Digite seu nome..."
+            value={name}
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.formInput}
             placeholder="Digite seu e-mail..."
-            keyboardType="email-addres"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
             autoCapitalize="none"
-            autoComplete="email"
           />
           <TextInput
             style={styles.formInput}
             placeholder="Digite sua senha..."
-            autoCapitalize="none"
+            value={password}
+            onChangeText={setPassword}
             secureTextEntry
           />
-
           <TextInput
             style={styles.formInput}
             placeholder="Digite seu endereço..."
-            autoCapitalize="none"
-            secureTextEntry
+            value={adress}
+            onChangeText={setAdress}
           />
-
           <TextInput
             style={styles.formInput}
             placeholder="Digite seu telefone..."
-            autoCapitalize="none"
-            secureTextEntry
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            keyboardType="phone-pad"
           />
         </View>
 
         <View style={styles.container2}>
-          <TouchableOpacity style={styles.formButton}>
-            <Text style={styles.textButton}>Entrar</Text>
+          <TouchableOpacity style={styles.formButton} onPress={handleRegister}>
+            <Text style={styles.textButton}>Cadastrar</Text>
           </TouchableOpacity>
+
           <Text style={{ textAlign: "center" }}>Acessar com</Text>
+
           <View style={styles.containerSocial}>
             <Pressable style={styles.socialButton}>
               <FontAwesome name="google" size={24} color="white" />
@@ -84,13 +127,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#05419A",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   container1: {
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 25,
+    paddingBottom: 20,
   },
   container2: {
     display: "flex",
@@ -100,7 +144,7 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: 36,
     color: "#05419A",
-    margin: 20
+    margin: 20,
   },
   containerInput: {
     alignItems: "center",
@@ -108,10 +152,10 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   formInput: {
-    borderWidth: 1, 
-    borderColor: "#05419A", 
-    borderRadius: 10, 
-    padding: 10, 
+    borderWidth: 1,
+    borderColor: "#05419A",
+    borderRadius: 10,
+    padding: 10,
     marginVertical: 5,
     width: "90%",
     fontSize: 20,
@@ -134,17 +178,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
   },
-
   socialButton: {
-    backgroundColor: "#DB4437", 
+    backgroundColor: "#DB4437",
     padding: 10,
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
-  },
-  header: {
-    width: "100%",
-    height: "30%",
   },
   containerLogo: {
     alignItems: "center",

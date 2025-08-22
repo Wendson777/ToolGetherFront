@@ -6,6 +6,7 @@ import Splash from "./src/Pages/Splash";
 import Home from "./src/Pages/Home";
 import Login from "./src/Pages/Login";
 import Register from "./src/Pages/Register";
+import Header from "./src/Components/Header";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,11 +34,11 @@ export default function App() {
           component={Register}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Header"
           component={Header}
           options={{ headerShown: false }}
-        /> */}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

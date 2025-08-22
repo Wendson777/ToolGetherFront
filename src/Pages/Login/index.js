@@ -9,8 +9,43 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import React, { useState } from "react";
 
 export default function Login({ navigation }) {
+  // const [email, setEmail] = useState("");
+  // const [senha, setSenha] = useState("");
+
+  // async function handleLogin() {
+  //   try {
+  //     const response = await fetch("http://192.168.1.10:3333/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email, password: senha }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       console.log("Login OK:", data);
+
+  //       // Exemplo: salvar o token e nome do usuário
+  //       // await AsyncStorage.setItem("token", data.token);
+  //       // await AsyncStorage.setItem("usuario", data.usuario);
+
+  //       Alert.alert("Sucesso", `Bem-vindo ${data.usuario}!`);
+
+  //       navigation.replace("Home"); // vai para tela Home
+  //     } else {
+  //       Alert.alert("Erro", data.message || "Falha no login");
+  //     }
+  //   } catch (error) {
+  //     Alert.alert("Erro", "Não foi possível conectar ao servidor");
+  //     console.error(error);
+  //   }
+  // }
+
   return (
     <View style={styles.conteiner}>
       <View style={styles.conteinerLogo}>
