@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -11,19 +18,21 @@ export default function Header() {
 
   useEffect(() => {
     // quando o componente monta, lê o nome salvo
-    AsyncStorage.getItem("usuario").then((nome) => {
-      if (nome) setUserName(nome);
+    AsyncStorage.getItem("user").then((name) => {
+      if (name) setUserName(name);
     });
   }, []);
 
   return (
     <View style={styles.container}>
+      <Feather name="menu" size={36} color="white" />
       <View style={styles.conteinerPesquisa}>
+        <TextInput style={styles.searchInput} placeholder="Pesquisa..." />
         <AntDesign name="search1" size={24} color="black" />
       </View>
       <View>
         {userName ? (
-          <Text>Olá {userName}!</Text>
+          <Text style={styles.userName}>Olá {userName}!</Text>
         ) : (
           <TouchableOpacity
             style={styles.Login}
@@ -32,6 +41,9 @@ export default function Header() {
             <Text style={styles.textRegister}>Login</Text>
           </TouchableOpacity>
         )}
+      </View>
+      <View style={styles.cart}>
+        <AntDesign name="shoppingcart" size={24} color="#05419A" />
       </View>
     </View>
   );
@@ -42,17 +54,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: "11%",
     width: "100%",
-    padding: 12,
+    padding: 8,
     backgroundColor: "#05419A",
     alignItems: "flex-end",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   conteinerPesquisa: {
-    alignItems: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: "60%",
     width: "40%",
     backgroundColor: "white",
     borderRadius: 25,
-    padding: 4,
+    paddingRight: 4,
+    paddingLeft: 4,
   },
   title: {
     color: "#fff",
@@ -62,5 +78,22 @@ const styles = StyleSheet.create({
   },
   Login: {
     backgroundColor: "red",
+  },
+  userName: {
+    color: "white",
+    fontSize: 16,
+  },
+  searchInput: {
+    alignItems: "flex-end",
+  },
+  cart: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 36,
+    height: 36,
+    backgroundColor: "white",
+    // borderWidth: 3,
+    // borderColor: "#fff",
+    borderRadius: 100,
   },
 });

@@ -15,7 +15,7 @@ import { Alert } from "react-native";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
 
   async function handleLogin() {
     try {
@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: emailTratado, password: senha }),
+        body: JSON.stringify({ email: emailTratado, password }),
       });
 
       const data = await response.json();
@@ -35,9 +35,9 @@ export default function Login({ navigation }) {
 
         //Exemplo: salvar o token e nome do usuário
         await AsyncStorage.setItem("token", data.token);
-        await AsyncStorage.setItem("usuario", data.usuario);
+        await AsyncStorage.setItem("user", data.user);
 
-        Alert.alert("Sucesso", `Bem-vindo ${data.usuario}!`);
+        Alert.alert("Sucesso", `Bem-vindo ${data.user}!`);
 
         navigation.replace("Home"); // vai para tela Home
       } else {
@@ -78,8 +78,8 @@ export default function Login({ navigation }) {
               placeholder="Digite sua senha..."
               autoCapitalize="none"
               secureTextEntry
-              value={senha}
-              onChangeText={setSenha}
+              value={password}
+              onChangeText={setPassword}
             />
           </View>
         </View>
