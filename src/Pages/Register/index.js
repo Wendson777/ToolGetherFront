@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -26,7 +26,7 @@ export default function Register() {
   // Função para cadastrar usuário
   const handleRegister = async () => {
     try {
-      const response = await fetch("http://192.168.1.10:3333/register", {
+      const response = await fetch("http://192.168.1.110:3333/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, adress, phoneNumber }),

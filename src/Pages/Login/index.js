@@ -10,41 +10,44 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
 export default function Login({ navigation }) {
-  // const [email, setEmail] = useState("");
-  // const [senha, setSenha] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
-  // async function handleLogin() {
-  //   try {
-  //     const response = await fetch("http://192.168.1.10:3333/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email, password: senha }),
-  //     });
+  async function handleLogin() {
+    try {
+      const emailTratado = email.trim().toLowerCase();
+      const response = await fetch("http://192.168.1.110:3333/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: emailTratado, password: senha }),
+      });
 
-  //     const data = await response.json();
+      const data = await response.json();
 
-  //     if (response.ok) {
-  //       console.log("Login OK:", data);
+      if (response.ok) {
+        console.log("Login OK:", data);
 
-  //       // Exemplo: salvar o token e nome do usuário
-  //       // await AsyncStorage.setItem("token", data.token);
-  //       // await AsyncStorage.setItem("usuario", data.usuario);
+        //Exemplo: salvar o token e nome do usuário
+        await AsyncStorage.setItem("token", data.token);
+        await AsyncStorage.setItem("usuario", data.usuario);
 
-  //       Alert.alert("Sucesso", `Bem-vindo ${data.usuario}!`);
+        Alert.alert("Sucesso", `Bem-vindo ${data.usuario}!`);
 
-  //       navigation.replace("Home"); // vai para tela Home
-  //     } else {
-  //       Alert.alert("Erro", data.message || "Falha no login");
-  //     }
-  //   } catch (error) {
-  //     Alert.alert("Erro", "Não foi possível conectar ao servidor");
-  //     console.error(error);
-  //   }
-  // }
+        navigation.replace("Home"); // vai para tela Home
+      } else {
+        Alert.alert("Erro", data.message || "Falha no login");
+      }
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível conectar ao servidor");
+      console.error(error);
+    }
+  }
 
   return (
     <View style={styles.conteiner}>
@@ -67,12 +70,16 @@ export default function Login({ navigation }) {
               keyboardType="email-addres"
               autoCapitalize="none"
               autoComplete="email"
+              value={email}
+              onChangeText={setEmail}
             />
             <TextInput
               style={styles.formInput}
               placeholder="Digite sua senha..."
               autoCapitalize="none"
               secureTextEntry
+              value={senha}
+              onChangeText={setSenha}
             />
           </View>
         </View>
@@ -85,7 +92,7 @@ export default function Login({ navigation }) {
         </Pressable>
 
         <View style={styles.conteiner2}>
-          <TouchableOpacity style={styles.formButton}>
+          <TouchableOpacity style={styles.formButton} onPress={handleLogin}>
             <Text style={styles.textButoon}>Entrar</Text>
           </TouchableOpacity>
           <Text style={{ textAlign: "center" }}>Acessar com</Text>

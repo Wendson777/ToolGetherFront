@@ -1,21 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Header() {
   const navigation = useNavigation();
+
+  const [userName, setUserName] = useState(null);
+
+  useEffect(() => {
+    // quando o componente monta, lê o nome salvo
+    AsyncStorage.getItem("usuario").then((nome) => {
+      if (nome) setUserName(nome);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.conteinerPesquisa}>
         <AntDesign name="search1" size={24} color="black" />
       </View>
-      <TouchableOpacity
-        style={styles.Login}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.textRegister}>Login</Text>
-      </TouchableOpacity>
+      <View>
+        {userName ? (
+          <Text>Olá {userName}!</Text>
+        ) : (
+          <TouchableOpacity
+            style={styles.Login}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.textRegister}>Login</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }
