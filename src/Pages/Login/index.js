@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: "60%",
+    width: "50%",
   },
   subConteiner: {
     // flex: 1,
@@ -148,8 +148,7 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 30,
     color: "#05419A",
-    margin: 25,
-    // marginBottom: 30,
+    margin: 15,
   },
   conteinerInput: {
     alignItems: "center",
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
   formButton: {
     backgroundColor: "#05419A",
     width: "90%",
-    margin: 10,
+    marginBottom: 10,
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
@@ -181,8 +180,8 @@ const styles = StyleSheet.create({
   containerSocial: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
-    marginBottom: 20,
+    padding: 5,
+    marginBottom: "10%",
   },
   socialButton: {
     backgroundColor: "#DB4437", // vermelho Google

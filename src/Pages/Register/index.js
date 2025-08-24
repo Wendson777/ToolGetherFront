@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -51,11 +51,11 @@ export default function Register() {
         <Image
           source={require("../../../assets/Logo.png")}
           resizeMode="contain"
-          style={styles.image}
+          style={styles.logo}
         />
       </View>
 
-      <View style={styles.container1}>
+      <View style={styles.subContainer}>
         <Text style={styles.formTitle}>Cadastre-se</Text>
         <StatusBar style="auto" />
 
@@ -96,27 +96,25 @@ export default function Register() {
           />
         </View>
 
-        <View style={styles.container2}>
-          <TouchableOpacity style={styles.formButton} onPress={handleRegister}>
-            <Text style={styles.textButton}>Cadastrar</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.formButton} onPress={handleRegister}>
+          <Text style={styles.textButton}>Cadastrar</Text>
+        </TouchableOpacity>
 
-          <Text style={{ textAlign: "center" }}>Acessar com</Text>
+        <Text style={{ textAlign: "center" }}>Acessar com</Text>
 
-          <View style={styles.containerSocial}>
-            <Pressable style={styles.socialButton}>
-              <FontAwesome name="google" size={24} color="white" />
-            </Pressable>
+        <View style={styles.containerSocial}>
+          <Pressable style={styles.socialButton}>
+            <FontAwesome name="google" size={24} color="white" />
+          </Pressable>
 
-            <Pressable
-              style={[
-                styles.socialButton,
-                { backgroundColor: "#3b5998", marginLeft: 10 },
-              ]}
-            >
-              <FontAwesome name="facebook" size={24} color="white" />
-            </Pressable>
-          </View>
+          <Pressable
+            style={[
+              styles.socialButton,
+              { backgroundColor: "#3b5998", marginLeft: 10 },
+            ]}
+          >
+            <FontAwesome name="facebook" size={24} color="white" />
+          </Pressable>
         </View>
       </View>
     </View>
@@ -129,27 +127,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#05419A",
     justifyContent: "flex-end",
   },
-  container1: {
+  subContainer: {
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 25,
-    paddingBottom: 20,
-  },
-  container2: {
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
   },
   formTitle: {
-    fontSize: 36,
+    fontSize: 30,
     color: "#05419A",
-    margin: 20,
+    margin: 15,
   },
   containerInput: {
     alignItems: "center",
     width: "100%",
-    gap: 20,
+    gap: 15,
   },
   formInput: {
     borderWidth: 1,
@@ -176,7 +167,8 @@ const styles = StyleSheet.create({
   containerSocial: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
+    padding: 5,
+    marginBottom: "10%",
   },
   socialButton: {
     backgroundColor: "#DB4437",
@@ -186,10 +178,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerLogo: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: "5%",
   },
-  image: {
-    width: "45%",
+  logo: {
+    width: "35%",
   },
 });

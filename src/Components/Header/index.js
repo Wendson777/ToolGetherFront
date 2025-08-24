@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Header() {
@@ -25,15 +25,19 @@ export default function Header() {
 
   return (
     <View style={styles.container}>
-      <Feather name="menu" size={36} color="white" />
+      <TouchableOpacity
+        style={styles.menu}
+        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+      >
+        <Feather name="menu" size={36} color="white" />
+      </TouchableOpacity>
+
       <View style={styles.conteinerPesquisa}>
         <TextInput style={styles.searchInput} placeholder="Pesquisa..." />
         <AntDesign name="search1" size={24} color="black" />
       </View>
       <View>
-        {userName ? (
-          <Text style={styles.userName}>Olá {userName}!</Text>
-        ) : (
+        {!userName && (
           <TouchableOpacity
             style={styles.Login}
             onPress={() => navigation.navigate("Login")}
@@ -64,11 +68,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     height: "60%",
-    width: "40%",
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    // width: "40%",
     backgroundColor: "white",
     borderRadius: 25,
-    paddingRight: 4,
-    paddingLeft: 4,
+    paddingRight: 6,
+    paddingLeft: 6,
   },
   title: {
     color: "#fff",
