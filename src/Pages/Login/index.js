@@ -20,7 +20,7 @@ export default function Login({ navigation }) {
   async function handleLogin() {
     try {
       const emailTratado = email.trim().toLowerCase();
-      const response = await fetch("http://192.168.1.110:3333/login", {
+      const response = await fetch("http://192.168.1.6:3333/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

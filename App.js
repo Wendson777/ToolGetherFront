@@ -7,6 +7,7 @@ import Splash from "./src/Pages/Splash";
 // import Home from "./src/Pages/Home";
 import Login from "./src/Pages/Login";
 import Register from "./src/Pages/Register";
+import Cart from "./src/Pages/Cart";
 import DrawerRoutes from "./src/Routes/DrawerRoutes";
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,11 @@ export default function App() {
         <Stack.Screen
           name="Register"
           component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
