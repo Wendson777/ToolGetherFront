@@ -46,8 +46,14 @@ export default function Header() {
           </TouchableOpacity>
         )}
       </View>
+
       <View style={styles.cart}>
-        <AntDesign name="shoppingcart" size={24} color="#05419A" />
+        <TouchableOpacity
+          // style={styles.Login}
+          onPress={() => navigation.navigate("Cart")}
+        >
+          <AntDesign name="shoppingcart" size={24} color="#05419A" />
+        </TouchableOpacity>
       </View>
     </View>
   );
