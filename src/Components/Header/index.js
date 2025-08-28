@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    height: "60%",
     flex: 1,
     marginLeft: 10,
     marginRight: 10,
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   searchInput: {
-    alignItems: "flex-end",
+    fontSize: 12,
   },
   cart: {
     alignItems: "center",

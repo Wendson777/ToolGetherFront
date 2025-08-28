@@ -39,6 +39,7 @@ export default function DrawerRoutes() {
       initialRouteName="Home"
     >
       <Drawer.Screen name="Home" component={Home} />
+
       <Drawer.Screen name="Logout" component={Logout} />
     </Drawer.Navigator>
   );

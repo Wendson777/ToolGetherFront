@@ -45,6 +45,14 @@ export default function Home() {
     <View style={styles.container}>
       <Header />
 
+      <View style={styles.ultimosItens}>
+        <Text style={styles.title}>Ultimos Itens Alugados</Text>
+      </View>
+      <View style={styles.container3}>
+        <View>
+          <Text style={styles.titleContainer3}>Baseado no que você viu</Text>
+        </View>
+      </View>
       <ScrollView
         style={styles.carrossel}
         horizontal={true}
@@ -83,15 +91,6 @@ export default function Home() {
           <Text style={styles.labelButton}>Futebol</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      <View style={styles.ultimosItens}>
-        <Text style={styles.title}>Ultimos Itens Alugados</Text>
-      </View>
-      <View style={styles.container3}>
-        <View>
-          <Text style={styles.titleContainer3}>Baseado no que você viu</Text>
-        </View>
-      </View>
     </View>
   );
 }
