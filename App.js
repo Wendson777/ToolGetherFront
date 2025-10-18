@@ -9,6 +9,7 @@ import Login from "./src/Pages/Login";
 import Register from "./src/Pages/Register";
 import Cart from "./src/Pages/Cart";
 import DrawerRoutes from "./src/Routes/DrawerRoutes";
+import Details from "./src/Pages/Details";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,11 @@ export default function App() {
           name="Home"
           component={DrawerRoutes}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Details"
+          component={Details}
         />
         <Stack.Screen
           name="Login"

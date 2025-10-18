@@ -197,19 +197,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
-  ultimosItens: {
-    backgroundColor: "#999",
-    width: "90%",
-    height: 180,
-    borderRadius: 18,
-    alignSelf: "center",
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 18,
-    marginLeft: 10,
-    marginTop: 10,
-  },
   carrossel: {
     maxHeight: 84,
     marginBottom: 14,
