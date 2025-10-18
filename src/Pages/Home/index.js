@@ -6,19 +6,20 @@ import {
   ScrollView,
   Image,
   SafeAreaView,
-  ActivityIndicator,
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 
+// Importações de Ícones
 import Octicons from "@expo/vector-icons/Octicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
 
-const MY_API_URL = "http://192.168.1.24:3333/getproducts";
+const API_BASE_URL = "http://192.168.1.24:3333";
+const MY_API_URL = `${API_BASE_URL}/getproducts`;
 
 function formatarPreco(valor) {
   if (typeof valor !== "number" || isNaN(valor)) {
@@ -26,7 +27,6 @@ function formatarPreco(valor) {
     if (!isNaN(numero)) {
       valor = numero;
     } else {
-      console.error("Entrada inválida. Por favor, forneça um número.");
       return "R$ 0,00";
     }
   }
@@ -39,15 +39,47 @@ function formatarPreco(valor) {
   return formatter.format(valor);
 }
 
+function getCategoryIcon(name) {
+  const lowerName = name ? name.toLowerCase() : "";
+  if (lowerName.includes("ferramenta"))
+    return <Octicons name="tools" size={30} color="black" />;
+  if (lowerName.includes("mobilidade"))
+    return <MaterialIcons name="pedal-bike" size={30} color="black" />;
+  if (lowerName.includes("evento"))
+    return <FontAwesome6 name="champagne-glasses" size={30} color="black" />;
+  if (lowerName.includes("equipamento") || lowerName.includes("câmera"))
+    return <MaterialIcons name="camera-alt" size={30} color="black" />;
+  if (lowerName.includes("futebol") || lowerName.includes("esporte"))
+    return <FontAwesome name="soccer-ball-o" size={24} color="black" />;
+  return <AntDesign name="appstore-o" size={30} color="black" />;
+}
+
 export default function Home({ navigation }) {
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  async function getCategories() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/categories`);
+      if (!response.ok) {
+        throw new Error(`Erro HTTP ao buscar categorias: ${response.status}`);
+      }
+      const categoriesData = await response.json();
+      setCategories(categoriesData);
+    } catch (err) {
+      console.error("Erro ao buscar categorias:", err);
+    } finally {
+      setIsLoadingCategories(false);
+    }
+  }
 
   async function getProducts() {
     try {
       setIsError(false);
-      setIsLoading(true);
+      setIsLoadingProducts(true);
 
       const response = await fetch(MY_API_URL);
 
@@ -57,35 +89,34 @@ export default function Home({ navigation }) {
 
       const productsData = await response.json();
       let productsList = productsData;
-
       setProducts(productsList);
     } catch (err) {
       console.error("Erro na requisição da API:", err);
       setIsError(true);
     } finally {
-      setIsLoading(false);
+      setIsLoadingProducts(false);
     }
   }
 
   useEffect(() => {
+    getCategories();
     getProducts();
   }, []);
 
-  function mudarTela(produto) {
-    if (navigation && navigation.navigate) {
-      navigation.navigate("Details", { produto: produto });
-    } else {
-      console.warn(
-        "A navegação não está configurada ou 'navigation' não foi passada."
-      );
+  function navigateToCategory(categoryId, categoryName) {
+    navigation.navigate("CategoryProducts", {
+      categoryId: categoryId,
+      categoryName: categoryName,
+    });
+  }
 
-      console.log("Produto Clicado (sem navegação):", produto.name);
-    }
+  function mudarTela(produto) {
+    navigation.navigate("Details", { produto: produto });
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header />
+      <Header navigation={navigation} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <ScrollView
@@ -93,37 +124,24 @@ export default function Home({ navigation }) {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          {/* Exemplo de botão no carrossel: */}
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <Octicons name="tools" size={30} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Ferramentas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <MaterialIcons name="pedal-bike" size={40} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Mobilidade</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <FontAwesome6 name="champagne-glasses" size={30} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Eventos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <MaterialIcons name="camera-alt" size={30} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Equipamentos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <FontAwesome name="soccer-ball-o" size={24} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Futebol</Text>
-          </TouchableOpacity>
+          {isLoadingCategories ? (
+            <Text style={{ paddingHorizontal: 15, alignSelf: "center" }}>
+              Carregando categorias...
+            </Text>
+          ) : (
+            categories.map((cat) => (
+              <TouchableOpacity
+                key={cat._id}
+                style={styles.actionButton}
+                onPress={() => navigateToCategory(cat._id, cat.name)}
+              >
+                <View style={styles.areaButton}>
+                  {getCategoryIcon(cat.name)}
+                </View>
+                <Text style={styles.labelButton}>{cat.name}</Text>
+              </TouchableOpacity>
+            ))
+          )}
         </ScrollView>
 
         <View style={styles.ultimosItens}>
@@ -132,22 +150,10 @@ export default function Home({ navigation }) {
 
         <View style={styles.container3}>
           <Text style={styles.titleContainer3}>Baseado no que você viu</Text>
+          {isError && <Text>Opssss.... erro ao buscar produtos</Text>}
 
-          {isError && (
-            <Text
-              style={{ color: "red", textAlign: "center", paddingVertical: 10 }}
-            >
-              Opssss.... erro ao buscar produtos. Tente novamente!
-            </Text>
-          )}
-
-          {isLoading ? (
-            <View style={{ paddingVertical: 20 }}>
-              <ActivityIndicator size="large" color="#05419A" />
-              <Text style={{ textAlign: "center", marginTop: 10 }}>
-                Carregando produtos...
-              </Text>
-            </View>
+          {isLoadingProducts ? (
+            <Text>Carregando produtos...</Text>
           ) : (
             <View style={styles.productList}>
               {products.map((item) => (
@@ -158,28 +164,16 @@ export default function Home({ navigation }) {
                   activeOpacity={0.7}
                 >
                   <Image
-                    source={{
-                      uri: item.url || "https://via.placeholder.com/120",
-                    }}
+                    source={{ uri: item.url }}
                     style={{ width: 120, height: 120 }}
-                    resizeMode="contain"
                   />
                   <Text style={styles.text_preco}>
                     {formatarPreco(item.price)}
                   </Text>
-                  <Text style={{ textAlign: "center", paddingHorizontal: 5 }}>
-                    {item.name}
-                  </Text>
+                  <Text>{item.name}</Text>
                 </TouchableOpacity>
               ))}
             </View>
-          )}
-
-          {/* Caso não haja produtos para exibir */}
-          {!isLoading && !isError && products.length === 0 && (
-            <Text style={{ textAlign: "center", paddingVertical: 20 }}>
-              Nenhum produto encontrado.
-            </Text>
           )}
         </View>
       </ScrollView>

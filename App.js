@@ -10,6 +10,8 @@ import Register from "./src/Pages/Register";
 import Cart from "./src/Pages/Cart";
 import DrawerRoutes from "./src/Routes/DrawerRoutes";
 import Details from "./src/Pages/Details";
+import CategoryProducts from "./src/Pages/CategoryProducts";
+import RentCheckout from "./src/Pages/RentCheckout";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +35,12 @@ export default function App() {
           component={Details}
         />
         <Stack.Screen
+          options={{ headerShown: false }}
+          name="CategoryProducts"
+          component={CategoryProducts}
+        />
+
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
@@ -46,6 +54,11 @@ export default function App() {
           name="Cart"
           component={Cart}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="RentCheckout"
+          component={RentCheckout}
         />
       </Stack.Navigator>
     </NavigationContainer>

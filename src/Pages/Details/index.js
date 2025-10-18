@@ -4,14 +4,14 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  Image,
   ScrollView,
+  Image,
   TouchableOpacity,
 } from "react-native";
+import Header from "../../Components/Header"; // Ajuste o caminho conforme sua estrutura
+import { AntDesign } from "@expo/vector-icons";
 
-import Header from "../../Components/Header";
-import { AntDesign, Feather } from "@expo/vector-icons";
-
+// Função auxiliar de formatação de preço (necessária para exibir R$)
 function formatarPreco(valor) {
   if (typeof valor !== "number" || isNaN(valor)) {
     const numero = parseFloat(valor);
@@ -21,267 +21,203 @@ function formatarPreco(valor) {
       return "R$ 0,00";
     }
   }
-
-  const formatter = new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
-  });
-
-  return formatter.format(valor);
+  }).format(valor);
 }
 
+// O componente recebe `route` para pegar os parâmetros e `navigation` para navegar
 export default function Details({ route, navigation }) {
+  // 1. Recebe o objeto do produto da tela anterior (Home ou CategoryProducts)
   const { produto } = route.params;
 
-  if (!produto) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Produto não encontrado! 🙁</Text>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.backButtonText}>Voltar</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
+  // 2. Função para navegar para a tela de aluguel
+  function navigateToRentCheckout() {
+    navigation.navigate("RentCheckout", {
+      product: produto, // Passa o objeto do produto
+    });
   }
 
+  // Você pode querer usar um estado para favoritos, mas por simplicidade, mantemos apenas o produto.
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      {/* Header com botão de voltar, se necessário */}
       <Header navigation={navigation} showBackButton={true} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Image
-          source={{ uri: produto.url || "https://via.placeholder.com/300" }}
-          style={styles.productImage}
-          resizeMode="cover"
-        />
+        {/* Imagem Principal */}
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: produto.url || "https://via.placeholder.com/300" }}
+            style={styles.mainImage}
+            resizeMode="contain"
+          />
+        </View>
 
-        <View style={styles.detailsBox}>
-          <View style={styles.headerInfo}>
-            <Text style={styles.productName}>{produto.name}</Text>
-            <Text style={styles.productPrice}>
-              {formatarPreco(produto.price)}
-            </Text>
+        {/* Conteúdo do Produto */}
+        <View style={styles.detailsContainer}>
+          <Text style={styles.productName}>{produto.name}</Text>
+
+          <View style={styles.priceContainer}>
+            <Text style={styles.priceTag}>{formatarPreco(produto.price)}</Text>
+            <Text style={styles.priceDuration}>/ dia</Text>
           </View>
 
+          <Text style={styles.sectionTitle}>Descrição</Text>
+          <Text style={styles.descriptionText}>
+            {produto.description || "Descrição não disponível."}
+          </Text>
+
+          <Text style={styles.sectionTitle}>Detalhes</Text>
           <View style={styles.infoRow}>
-            <Feather name="briefcase" size={18} color="#05419A" />
-            <Text style={styles.infoText}>Fabricante:</Text>
+            <Text style={styles.infoLabel}>Disponibilidade:</Text>
             <Text style={styles.infoValue}>
-              {produto.manufacturer || "Não Informado"}
+              {produto.stock > 0
+                ? `Em estoque (${produto.stock} unid.)`
+                : "Esgotado"}
             </Text>
           </View>
-
-          <Text style={styles.productDescription}>{produto.description}</Text>
-
-          {/* <Text style={styles.sectionTitle}>Detalhes Adicionais</Text>
-
-          <View style={styles.footerRow}>
-            <Feather name="tag" size={16} color="#333" />
-            <Text style={styles.footerText}>Categoria ID:</Text>
-            <Text style={styles.footerValue}>
-              {produto.category || "ID Desconhecido"}
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Localização:</Text>
+            <Text style={styles.infoValue}>
+              {produto.location || "Não informado"}
             </Text>
           </View>
-
-          <View style={styles.footerRow}>
-            <Feather name="user" size={16} color="#333" />
-            <Text style={styles.footerText}>ID do Dono:</Text>
-            <Text style={styles.footerValue}>
-              {produto.idOwner || "ID Desconhecido"}
-            </Text>
-          </View> */}
-
-          <TouchableOpacity
-            style={styles.buyNowButton}
-            disabled={produto.stock <= 0}
-          >
-            <Text style={styles.buttonText}>Alugar Agora</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.addToCartButton}
-            disabled={produto.stock <= 0}
-          >
-            <Text style={styles.buttonText}>Consultar Loja</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* 3. Footer com Botão de Ação */}
+      <View style={styles.footer}>
+        {/* Botão de Favoritar (Exemplo) */}
+        <TouchableOpacity style={styles.favoriteButton}>
+          <AntDesign name="hearto" size={24} color="#05419A" />
+        </TouchableOpacity>
+
+        {/* Botão de Alugar Agora */}
+        <TouchableOpacity
+          style={[
+            styles.buyNowButton,
+            produto.stock <= 0 && styles.disabledButton,
+          ]}
+          onPress={navigateToRentCheckout}
+          disabled={produto.stock <= 0}
+        >
+          <Text style={styles.buttonText}>
+            {produto.stock > 0 ? "Alugar Agora" : "Esgotado"}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
-const buttonBase = {
-  padding: 15,
-  borderRadius: 8,
-  alignItems: "center",
-  marginBottom: 10,
-  width: "90%",
-};
+
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#fff",
   },
   scrollContent: {
-    paddingBottom: 40,
+    paddingBottom: 20,
   },
-
-  backImageButton: {
-    position: "absolute",
-    top: 10,
-    left: 20,
-    zIndex: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    borderRadius: 20,
-    padding: 5,
-  },
-
-  productImage: {
+  imageContainer: {
     width: "100%",
-    height: 350,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-
-  detailsBox: {
-    paddingHorizontal: 20,
-    marginTop: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerInfo: {
-    // flexDirection: "row",
+    height: 300,
+    backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+  },
+  mainImage: {
+    width: "90%",
+    height: "90%",
+  },
+  detailsContainer: {
+    padding: 20,
   },
   productName: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "black",
-    flexShrink: 1,
-    marginRight: 10,
-    textAlign: "center",
-  },
-  productPrice: {
-    fontSize: 26,
-    fontWeight: "900",
-    color: "#05419A",
-    textAlign: "center",
-  },
-
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 15,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  infoText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 10,
-    marginRight: 5,
     color: "#333",
+    marginBottom: 10,
   },
-  infoValue: {
-    fontSize: 16,
+  priceContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginBottom: 20,
+  },
+  priceTag: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#FF6347", // Destaque para o preço
+  },
+  priceDuration: {
+    fontSize: 18,
     color: "#666",
+    marginLeft: 5,
   },
-
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#05419A",
-    marginTop: 20,
-    marginBottom: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: "#05419A50",
+    marginTop: 15,
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
     paddingBottom: 5,
   },
-  productDescription: {
+  descriptionText: {
     fontSize: 16,
-    lineHeight: 24,
     color: "#444",
-    padding: 10,
+    lineHeight: 24,
   },
-
-  footerRow: {
+  infoRow: {
     flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
+    justifyContent: "space-between",
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f5f5f5",
   },
-  footerText: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginLeft: 8,
-    color: "#555",
-  },
-  footerValue: {
-    fontSize: 14,
-    color: "#777",
-    marginLeft: 5,
-  },
-
-  rentButton: {
-    backgroundColor: "#FF6347",
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 30,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-    elevation: 5,
-  },
-  rentButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 20,
-    color: "red",
-    marginBottom: 20,
-  },
-  backButton: {
-    backgroundColor: "#05419A",
-    padding: 10,
-    borderRadius: 5,
-  },
-  backButtonText: {
-    color: "#fff",
+  infoLabel: {
     fontSize: 16,
+    fontWeight: "600",
+    color: "#666",
   },
-  actionButtonContainer: {
+  infoValue: {
+    fontSize: 16,
+    color: "#333",
+  },
+  footer: {
+    flexDirection: "row",
     padding: 15,
     borderTopWidth: 1,
     borderTopColor: "#eee",
     backgroundColor: "#fff",
   },
-  addToCartButton: {
-    ...buttonBase,
-    backgroundColor: "#00A86B",
+  favoriteButton: {
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "#05419A",
+    marginRight: 10,
   },
   buyNowButton: {
-    ...buttonBase,
-    backgroundColor: "#6A5ACD",
-    marginBottom: 12,
-    marginTop: 10,
+    flex: 1,
+    backgroundColor: "#05419A",
+    padding: 18,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  disabledButton: {
+    backgroundColor: "#aaa", // Cor para botão desabilitado
   },
   buttonText: {
-    color: "white",
-    fontSize: 15,
+    color: "#fff",
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

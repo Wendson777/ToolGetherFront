@@ -20,7 +20,7 @@ export default function Login({ navigation }) {
   async function handleLogin() {
     try {
       const emailTratado = email.trim().toLowerCase();
-      const response = await fetch("http://192.168.1.6:3333/login", {
+      const response = await fetch("http://192.168.1.24:3333/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,13 +33,24 @@ export default function Login({ navigation }) {
       if (response.ok) {
         console.log("Login OK:", data);
 
-        //Exemplo: salvar o token e nome do usuário
+        // Salvar o token
         await AsyncStorage.setItem("token", data.token);
-        await AsyncStorage.setItem("user", data.user);
 
-        Alert.alert("Sucesso", `Bem-vindo ${data.user}!`);
+        // 💡 ALTERAÇÃO CRÍTICA: Salvar o ID do usuário retornado pelo backend
+        if (data.userId) {
+          await AsyncStorage.setItem("userId", data.userId);
+        }
 
-        navigation.replace("Home"); // vai para tela Home
+        // Salvar o nome do usuário para exibição
+        if (data.user) {
+          await AsyncStorage.setItem("user", data.user);
+          Alert.alert("Sucesso", `Bem-vindo ${data.user}!`);
+        } else {
+          Alert.alert("Sucesso", "Bem-vindo!");
+          await AsyncStorage.setItem("user", "Usuário");
+        }
+
+        navigation.replace("Home");
       } else {
         Alert.alert("Erro", data.message || "Falha no login");
       }
@@ -67,7 +78,7 @@ export default function Login({ navigation }) {
             <TextInput
               style={styles.formInput}
               placeholder="Digite seu e-mail..."
-              keyboardType="email-addres"
+              keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
               value={email}

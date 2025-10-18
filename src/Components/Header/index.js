@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#05419A",
     // Adicione margem se necessário para separação
     // marginRight: 5,
   },

@@ -1,24 +1,16 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Image,
   SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Image,
   ActivityIndicator,
 } from "react-native";
-
-import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
-
-import Octicons from "@expo/vector-icons/Octicons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
-
-const MY_API_URL = "http://192.168.1.24:3333/getproducts";
 
 function formatarPreco(valor) {
   if (typeof valor !== "number" || isNaN(valor)) {
@@ -26,41 +18,43 @@ function formatarPreco(valor) {
     if (!isNaN(numero)) {
       valor = numero;
     } else {
-      console.error("Entrada inválida. Por favor, forneça um número.");
       return "R$ 0,00";
     }
   }
-
-  const formatter = new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
-  });
-
-  return formatter.format(valor);
+  }).format(valor);
 }
 
-export default function Home({ navigation }) {
+const API_BASE_URL = "http://192.168.1.24:3333";
+
+export default function CategoryProducts({ route, navigation }) {
+  const { categoryId, categoryName } = route.params;
+
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  async function getProducts() {
-    try {
-      setIsError(false);
-      setIsLoading(true);
+  async function fetchCategoryProducts() {
+    setIsError(false);
+    setIsLoading(true);
 
-      const response = await fetch(MY_API_URL);
+    const URL = `${API_BASE_URL}/products/category/${categoryId}`;
+
+    try {
+      const response = await fetch(URL);
 
       if (!response.ok) {
-        throw new Error(`Erro HTTP: ${response.status}`);
+        throw new Error(
+          `Erro ao buscar produtos para ID ${categoryId}: ${response.status}`
+        );
       }
 
       const productsData = await response.json();
-      let productsList = productsData;
-
-      setProducts(productsList);
+      setProducts(productsData);
     } catch (err) {
-      console.error("Erro na requisição da API:", err);
+      console.error("Erro na requisição de categoria:", err);
       setIsError(true);
     } finally {
       setIsLoading(false);
@@ -68,119 +62,61 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
-    getProducts();
-  }, []);
+    fetchCategoryProducts();
+  }, [categoryId]);
 
-  function mudarTela(produto) {
-    if (navigation && navigation.navigate) {
-      navigation.navigate("Details", { produto: produto });
-    } else {
-      console.warn(
-        "A navegação não está configurada ou 'navigation' não foi passada."
-      );
-
-      console.log("Produto Clicado (sem navegação):", produto.name);
-    }
+  function navigateToDetails(produto) {
+    navigation.navigate("Details", { produto: produto });
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header />
+      <Header navigation={navigation} showBackButton={true} />
+
+      <View style={styles.headerTitle}>
+        <Text style={styles.title}>Produtos em "{categoryName}"</Text>
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <ScrollView
-          style={styles.carrossel}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          {/* Exemplo de botão no carrossel: */}
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <Octicons name="tools" size={30} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Ferramentas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <MaterialIcons name="pedal-bike" size={40} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Mobilidade</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <FontAwesome6 name="champagne-glasses" size={30} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Eventos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <MaterialIcons name="camera-alt" size={30} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Equipamentos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <View style={styles.areaButton}>
-              <FontAwesome name="soccer-ball-o" size={24} color="black" />
-            </View>
-            <Text style={styles.labelButton}>Futebol</Text>
-          </TouchableOpacity>
-        </ScrollView>
+        {isLoading && (
+          <ActivityIndicator
+            size="large"
+            color="#05419A"
+            style={{ marginTop: 50 }}
+          />
+        )}
 
-        <View style={styles.ultimosItens}>
-          <Text style={styles.title}>Ultimos Itens Alugados</Text>
-        </View>
+        {isError && (
+          <Text style={styles.errorText}>
+            Não foi possível carregar os produtos desta categoria.
+          </Text>
+        )}
 
-        <View style={styles.container3}>
-          <Text style={styles.titleContainer3}>Baseado no que você viu</Text>
+        {!isLoading && products.length === 0 && !isError && (
+          <Text style={styles.noProductsText}>
+            Nenhum produto encontrado na categoria "{categoryName}".
+          </Text>
+        )}
 
-          {isError && (
-            <Text
-              style={{ color: "red", textAlign: "center", paddingVertical: 10 }}
+        <View style={styles.productList}>
+          {products.map((item) => (
+            <TouchableOpacity
+              key={item._id}
+              style={styles.productItem}
+              onPress={() => navigateToDetails(item)}
+              activeOpacity={0.7}
             >
-              Opssss.... erro ao buscar produtos. Tente novamente!
-            </Text>
-          )}
-
-          {isLoading ? (
-            <View style={{ paddingVertical: 20 }}>
-              <ActivityIndicator size="large" color="#05419A" />
-              <Text style={{ textAlign: "center", marginTop: 10 }}>
-                Carregando produtos...
+              <Image
+                source={{ uri: item.url || "https://via.placeholder.com/120" }}
+                style={styles.productImage}
+                resizeMode="contain"
+              />
+              <Text style={styles.text_preco}>{formatarPreco(item.price)}</Text>
+              <Text style={{ textAlign: "center", paddingHorizontal: 5 }}>
+                {item.name}
               </Text>
-            </View>
-          ) : (
-            <View style={styles.productList}>
-              {products.map((item) => (
-                <TouchableOpacity
-                  key={item._id}
-                  style={styles.productItem}
-                  onPress={() => mudarTela(item)}
-                  activeOpacity={0.7}
-                >
-                  <Image
-                    source={{
-                      uri: item.url || "https://via.placeholder.com/120",
-                    }}
-                    style={{ width: 120, height: 120 }}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.text_preco}>
-                    {formatarPreco(item.price)}
-                  </Text>
-                  <Text style={{ textAlign: "center", paddingHorizontal: 5 }}>
-                    {item.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-
-          {/* Caso não haja produtos para exibir */}
-          {!isLoading && !isError && products.length === 0 && (
-            <Text style={{ textAlign: "center", paddingVertical: 20 }}>
-              Nenhum produto encontrado.
-            </Text>
-          )}
+            </TouchableOpacity>
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -192,73 +128,61 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-
   scrollContent: {
+    paddingHorizontal: 20,
     paddingBottom: 20,
   },
-
-  carrossel: {
-    maxHeight: 84,
-    marginBottom: 14,
-    marginTop: 18,
-    paddingEnd: 14,
-    paddingStart: 14,
-  },
-  actionButton: {
-    alignItems: "center",
-    marginRight: 32,
-  },
-  areaButton: {
-    backgroundColor: "#ecf0f1",
-    height: 60,
-    width: 60,
-    alignItems: "center",
-    borderRadius: 30,
-    justifyContent: "center",
-  },
-  labelButton: {
-    marginTop: 4,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  titleContainer3: {
-    color: "#05419A",
-    fontSize: 24,
-    marginBottom: 10,
-    fontWeight: "bold", // Adicionado para destacar o título
-  },
-  container3: {
-    width: "100%",
+  headerTitle: {
     paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    backgroundColor: "#f9f9f9",
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#05419A",
   },
   productList: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between", // Distribui o espaço entre os itens
-    paddingBottom: 20,
+    justifyContent: "space-between",
+    paddingTop: 10,
   },
-  // Estilo aplicado ao TouchableOpacity, mantendo o visual do View
   productItem: {
     marginBottom: 15,
-    paddingVertical: 10, // Ajustado para dar espaço interno
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    width: "48%", // Mantido para exibir 2 colunas
+    paddingVertical: 10,
+    width: "48%",
     backgroundColor: "#f9f9f9",
     borderRadius: 8,
-    shadowColor: "#000",
     alignItems: "center",
-    // elevation: 3, // Sombra para Android
-    // shadowColor: "#000", // Sombra para iOS
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 3,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
-
+  productImage: {
+    width: "90%",
+    height: 120,
+    marginBottom: 5,
+  },
   text_preco: {
     color: "#05419A",
     fontSize: 18,
     fontWeight: "bold",
-    marginVertical: 5, // Espaçamento vertical
+    marginVertical: 5,
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 50,
+  },
+  noProductsText: {
+    textAlign: "center",
+    marginTop: 50,
+    fontSize: 16,
+    color: "#666",
   },
 });
