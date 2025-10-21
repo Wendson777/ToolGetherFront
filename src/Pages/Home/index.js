@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  SafeAreaView,
+  StatusBar, // Adicionado para garantir o controle da barra de status
 } from "react-native";
-
+// import { SafeAreaView } from "react-native-safe-area-context"; // 🚨 Removido
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
 
@@ -18,7 +18,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
 
-const API_BASE_URL = "http://192.168.1.24:3333";
+const API_BASE_URL = "http://192.168.68.106:3333";
 const MY_API_URL = `${API_BASE_URL}/getproducts`;
 
 function formatarPreco(valor) {
@@ -101,6 +101,11 @@ export default function Home({ navigation }) {
   useEffect(() => {
     getCategories();
     getProducts();
+
+    // Garante que a barra de status tenha o esquema de cores correto (ícones brancos)
+    StatusBar.setBarStyle("light-content", true);
+    // Define o fundo da Status Bar (só afeta Android)
+    StatusBar.setBackgroundColor("#05419A");
   }, []);
 
   function navigateToCategory(categoryId, categoryName) {
@@ -115,10 +120,15 @@ export default function Home({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    // 🚨 Troca de SafeAreaView para View
+    <View style={styles.mainContainer}>
       <Header navigation={navigation} />
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      {/* 🚨 ScrollView ocupa o espaço restante */}
+      <ScrollView
+        style={styles.scrollViewFlex}
+        contentContainerStyle={styles.scrollContent}
+      >
         <ScrollView
           style={styles.carrossel}
           horizontal={true}
@@ -177,17 +187,26 @@ export default function Home({ navigation }) {
           )}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  // 🚨 Container Principal: Branco, ocupa a tela toda.
+  mainContainer: {
     flex: 1,
     backgroundColor: "#fff",
   },
 
+  // 🚨 ScrollView: Ocupa o espaço abaixo do Header.
+  scrollViewFlex: {
+    flex: 1,
+  },
+
+  // 🚨 ScrollContent: Garante que o fundo do conteúdo interno seja branco.
   scrollContent: {
+    flexGrow: 1,
+    backgroundColor: "#fff",
     paddingBottom: 20,
   },
 
@@ -232,7 +251,7 @@ const styles = StyleSheet.create({
     color: "#05419A",
     fontSize: 24,
     marginBottom: 10,
-    fontWeight: "bold", // Adicionado para destacar o título
+    fontWeight: "bold",
   },
   container3: {
     width: "100%",
@@ -241,31 +260,25 @@ const styles = StyleSheet.create({
   productList: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between", // Distribui o espaço entre os itens
+    justifyContent: "space-between",
     paddingBottom: 20,
   },
-  // Estilo aplicado ao TouchableOpacity, mantendo o visual do View
   productItem: {
     marginBottom: 15,
-    paddingVertical: 10, // Ajustado para dar espaço interno
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    width: "48%", // Mantido para exibir 2 colunas
+    width: "48%",
     backgroundColor: "#f9f9f9",
     borderRadius: 8,
     shadowColor: "#000",
     alignItems: "center",
-    // elevation: 3, // Sombra para Android
-    // shadowColor: "#000", // Sombra para iOS
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 3,
   },
 
   text_preco: {
     color: "#05419A",
     fontSize: 18,
     fontWeight: "bold",
-    marginVertical: 5, // Espaçamento vertical
+    marginVertical: 5,
   },
 });

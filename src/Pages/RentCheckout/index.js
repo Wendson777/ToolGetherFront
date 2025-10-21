@@ -3,17 +3,16 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
   Alert,
+  StatusBar,
 } from "react-native";
 import Header from "../../Components/Header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Função auxiliar para formatar preço (copiada das suas outras telas)
 function formatarPreco(valor) {
   if (typeof valor !== "number" || isNaN(valor)) {
     const numero = parseFloat(valor);
@@ -29,27 +28,29 @@ function formatarPreco(valor) {
   }).format(valor);
 }
 
-const API_BASE_URL = "http://192.168.1.24:3333";
+// 🚨 ATENÇÃO: Verifique se este é o IP correto da sua rede Wi-Fi!
+const API_BASE_URL = "http://192.168.68.106:3333";
 
 export default function RentCheckout({ route, navigation }) {
-  // Produto enviado da tela de Detalhes
   const { product } = route.params;
 
-  const [rentalDays, setRentalDays] = useState("1"); // Duração do aluguel em dias
+  const [rentalDays, setRentalDays] = useState("1");
   const [totalPrice, setTotalPrice] = useState(product.price * 1);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Efeito para recalcular o preço total quando a duração mudar
   useEffect(() => {
     const days = parseInt(rentalDays) || 1;
     setTotalPrice(product.price * days);
   }, [rentalDays, product.price]);
 
-  // Função principal de aluguel
+  useEffect(() => {
+    StatusBar.setBarStyle("light-content", true);
+    StatusBar.setBackgroundColor("#05419A");
+  }, []);
+
   async function handleRent() {
     if (isProcessing) return;
 
-    // 1. Validação
     const days = parseInt(rentalDays);
     if (isNaN(days) || days <= 0) {
       Alert.alert("Erro", "Por favor, insira um número de dias válido.");
@@ -59,9 +60,8 @@ export default function RentCheckout({ route, navigation }) {
     setIsProcessing(true);
 
     try {
-      // 2. Obtém o token e o ID do usuário (CRUCIAL para a API)
       const token = await AsyncStorage.getItem("token");
-      const userId = await AsyncStorage.getItem("userId"); // Assumindo que você salva o ID
+      const userId = await AsyncStorage.getItem("userId");
 
       console.log("Token Recuperado:", token ? "SIM" : "NÃO");
       console.log("UserId Recuperado:", userId);
@@ -71,45 +71,61 @@ export default function RentCheckout({ route, navigation }) {
           "Acesso Negado",
           "Você precisa estar logado para alugar um produto."
         );
-        navigation.navigate("Login"); // Redireciona para o login
+        navigation.navigate("Login");
         return;
       }
 
-      // 3. Monta o objeto de dados da transação
+      // 🚨 ALTERAÇÃO: Mapeando nomes de campos para o backend (duration e price)
       const rentData = {
         productId: product._id,
-        userId: userId, // Id do locatário
-        ownerId: product.idOwner, // Id do dono do produto
-        rentalDays: days,
-        totalAmount: totalPrice,
-        // Aqui você pode adicionar data de início, etc.
+        userId: userId,
+        duration: days, // Antes: rentalDays
+        price: totalPrice, // Antes: totalAmount
+        startDate: new Date().toISOString(), // Adicionando data de início
       };
 
-      // 4. Envia a requisição para o Backend
-      const response = await fetch(`${API_BASE_URL}/rents`, {
-        // 💡 NOVA ROTA: POST /rents
+      // 🚨 ALTERAÇÃO: Rota alterada para /rent
+      const response = await fetch(`${API_BASE_URL}/rent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Envia o token para autenticação
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(rentData),
       });
 
       if (!response.ok) {
-        // Trata erros de validação (400) ou servidor (500)
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao processar o aluguel.");
+        // 🚨 NOVO TRATAMENTO DE ERRO: Tenta ler como JSON, se falhar, lê como texto
+        const responseBody = await response.text();
+        console.error("Status da Resposta:", response.status);
+        console.error("Corpo da Resposta (TEXTO):", responseBody);
+
+        let errorMessage = `Erro de Servidor: Status ${response.status}.`;
+
+        try {
+          const errorData = JSON.parse(responseBody);
+          errorMessage = errorData.message || errorMessage;
+        } catch (jsonError) {
+          // Se falhou ao parsear, o body não é JSON (é HTML ou texto simples)
+          errorMessage += ` Resposta não é JSON. Conteúdo inicial: ${responseBody.substring(
+            0,
+            50
+          )}...`;
+        }
+
+        throw new Error(errorMessage);
       }
 
-      // 5. Sucesso
+      // Se a resposta for OK (2xx), continua
+      // Se o backend retorna 201 com body, pode-se usar await response.json() aqui.
+      // Caso contrário, apenas continua com a mensagem de sucesso.
+
       Alert.alert(
         "Sucesso!",
         `Aluguel de ${product.name} confirmado por ${days} dias.`
       );
 
-      // Navega de volta para a Home ou para a tela de Pedidos
-      navigation.popToTop(); // Volta para a tela principal (Home)
+      navigation.popToTop();
     } catch (error) {
       Alert.alert("Erro no Aluguel", error.message);
     } finally {
@@ -118,13 +134,12 @@ export default function RentCheckout({ route, navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.mainContainer}>
       <Header navigation={navigation} showBackButton={true} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Confirmar Aluguel</Text>
 
-        {/* Resumo do Produto */}
         <View style={styles.productSummary}>
           <Text style={styles.productName}>{product.name}</Text>
           <Text style={styles.pricePerDay}>
@@ -132,17 +147,15 @@ export default function RentCheckout({ route, navigation }) {
           </Text>
         </View>
 
-        {/* Input de Duração */}
         <Text style={styles.label}>Duração do Aluguel (Dias):</Text>
         <TextInput
           style={styles.input}
           value={rentalDays}
-          onChangeText={(text) => setRentalDays(text.replace(/[^0-9]/g, ""))} // Apenas números
+          onChangeText={(text) => setRentalDays(text.replace(/[^0-9]/g, ""))}
           keyboardType="numeric"
           placeholder="Ex: 5"
         />
 
-        {/* Resumo do Pedido */}
         <View style={styles.summaryBox}>
           <View style={styles.summaryItem}>
             <Text style={styles.summaryText}>Dias de Aluguel:</Text>
@@ -162,7 +175,6 @@ export default function RentCheckout({ route, navigation }) {
           </View>
         </View>
 
-        {/* Botão de Confirmação */}
         <TouchableOpacity
           style={[
             styles.rentButton,
@@ -178,12 +190,15 @@ export default function RentCheckout({ route, navigation }) {
           )}
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#fff" },
+  mainContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   scrollContent: { padding: 20 },
   title: {
     fontSize: 24,

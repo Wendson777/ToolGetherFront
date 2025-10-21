@@ -3,12 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  StatusBar, // Adicionado para garantir o controle da barra de status
 } from "react-native";
+// import { SafeAreaView } from "react-native-safe-area-context"; // 🚨 Removido
 import Header from "../../Components/Header";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -27,7 +28,7 @@ function formatarPreco(valor) {
   }).format(valor);
 }
 
-const API_BASE_URL = "http://192.168.1.24:3333";
+const API_BASE_URL = "http://192.168.68.106:3333";
 
 export default function CategoryProducts({ route, navigation }) {
   const { categoryId, categoryName } = route.params;
@@ -63,6 +64,10 @@ export default function CategoryProducts({ route, navigation }) {
 
   useEffect(() => {
     fetchCategoryProducts();
+
+    // Garante que a barra de status tenha o esquema de cores correto
+    StatusBar.setBarStyle("light-content", true);
+    StatusBar.setBackgroundColor("#05419A");
   }, [categoryId]);
 
   function navigateToDetails(produto) {
@@ -70,14 +75,19 @@ export default function CategoryProducts({ route, navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    // 🚨 MUDANÇA 1: Troca de SafeAreaView para View
+    <View style={styles.mainContainer}>
       <Header navigation={navigation} showBackButton={true} />
 
       <View style={styles.headerTitle}>
         <Text style={styles.title}>Produtos em "{categoryName}"</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      {/* 🚨 ScrollView ocupa o espaço restante */}
+      <ScrollView
+        style={styles.scrollViewFlex}
+        contentContainerStyle={styles.scrollContent}
+      >
         {isLoading && (
           <ActivityIndicator
             size="large"
@@ -119,25 +129,36 @@ export default function CategoryProducts({ route, navigation }) {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  // 🚨 MUDANÇA 2: Novo container principal
+  mainContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#fff", // Fundo principal branco
   },
+
+  // 🚨 Novo estilo para o ScrollView ocupar o espaço
+  scrollViewFlex: {
+    flex: 1,
+  },
+
+  // Estilo original safeArea (agora obsoleto)
+  // safeArea: { flex: 1, backgroundColor: "#fff" },
+
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    backgroundColor: "#fff", // Garante que o ScrollView é branco
   },
   headerTitle: {
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#f9f9f9", // Mantendo o fundo cinza claro para esta seção
   },
   title: {
     fontSize: 22,
@@ -157,11 +178,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     borderRadius: 8,
     alignItems: "center",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    elevation: 0.5,
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 3,
   },
   productImage: {
     width: "90%",

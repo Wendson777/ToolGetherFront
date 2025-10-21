@@ -1,6 +1,7 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Home from "../../Pages/Home";
+import Userconfig from "../../Pages/Userconfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
 
@@ -39,7 +40,7 @@ export default function DrawerRoutes() {
       initialRouteName="Home"
     >
       <Drawer.Screen name="Home" component={Home} />
-
+      <Drawer.Screen name="Meu Perfil" component={Userconfig} />
       <Drawer.Screen name="Logout" component={Logout} />
     </Drawer.Navigator>
   );
