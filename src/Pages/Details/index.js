@@ -39,11 +39,8 @@ export default function Details({ route, navigation }) {
     });
   }
 
-  // Você pode querer usar um estado para favoritos, mas por simplicidade, mantemos apenas o produto.
-
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header com botão de voltar, se necessário */}
       <Header navigation={navigation} showBackButton={true} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -56,7 +53,6 @@ export default function Details({ route, navigation }) {
           />
         </View>
 
-        {/* Conteúdo do Produto */}
         <View style={styles.detailsContainer}>
           <Text style={styles.productName}>{produto.name}</Text>
 
@@ -88,14 +84,11 @@ export default function Details({ route, navigation }) {
         </View>
       </ScrollView>
 
-      {/* 3. Footer com Botão de Ação */}
       <View style={styles.footer}>
-        {/* Botão de Favoritar (Exemplo) */}
         <TouchableOpacity style={styles.favoriteButton}>
           <AntDesign name="hearto" size={24} color="#05419A" />
         </TouchableOpacity>
 
-        {/* Botão de Alugar Agora */}
         <TouchableOpacity
           style={[
             styles.buyNowButton,
@@ -149,7 +142,7 @@ const styles = StyleSheet.create({
   priceTag: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#FF6347", // Destaque para o preço
+    color: "#FF6347",
   },
   priceDuration: {
     fontSize: 18,
