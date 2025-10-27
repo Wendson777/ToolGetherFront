@@ -5,16 +5,15 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Dimensions, // Importado para ajudar a centralizar
+  Dimensions,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { DrawerActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { height, width, font } from "../../utils/responsive";
+import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get("window");
-
-// Recebe 'navigation' e 'showBackButton' via props
 export default function Header({ navigation, showBackButton = false }) {
   const [userName, setUserName] = useState(null);
 
@@ -24,24 +23,21 @@ export default function Header({ navigation, showBackButton = false }) {
     });
   }, []);
 
-  // Determina o conteúdo do botão do canto esquerdo
   const leftButton = showBackButton ? (
-    // Se for a tela de detalhes, exibe o botão de voltar
     <TouchableOpacity
       style={styles.menu}
       onPress={() => navigation && navigation.goBack()}
     >
-      <AntDesign name="arrowleft" size={36} color="white" />
+      <Ionicons name="arrow-back" size={30} color="white" />
     </TouchableOpacity>
   ) : (
-    // Senão, exibe o botão de menu lateral
     <TouchableOpacity
       style={styles.menu}
       onPress={() =>
         navigation && navigation.dispatch(DrawerActions.toggleDrawer())
       }
     >
-      <Feather name="menu" size={36} color="white" />
+      <Feather name="menu" size={font(4.5)} color="white" />
     </TouchableOpacity>
   );
 
@@ -50,27 +46,30 @@ export default function Header({ navigation, showBackButton = false }) {
       {leftButton}
 
       <View style={styles.conteinerPesquisa}>
-        <TextInput style={styles.searchInput} placeholder="Pesquisa..." />
-        <AntDesign name="search1" size={24} color="black" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Pesquisa..."
+          placeholderTextColor="#999"
+        />
+        <Feather name="search" size={font(2.5)} color="#05419A" />
       </View>
 
-      <View>
+      <View style={styles.loginContainer}>
         {!userName && (
           <TouchableOpacity
-            style={styles.Login}
+            style={styles.LoginButtonIcon}
             onPress={() => navigation && navigation.navigate("Login")}
           >
-            <Text style={styles.textRegister}>Login</Text>
+            <Feather name="user" size={font(4)} color="#fff" />
           </TouchableOpacity>
         )}
       </View>
 
-      {/* 4. CARRINHO (Mantido) */}
       <View style={styles.cart}>
         <TouchableOpacity
           onPress={() => navigation && navigation.navigate("Cart")}
         >
-          <AntDesign name="shoppingcart" size={24} color="#05419A" />
+          <Feather name="shopping-cart" size={font(3.5)} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>
@@ -80,70 +79,61 @@ export default function Header({ navigation, showBackButton = false }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    height: "11%",
-    width: "100%",
-    padding: 8,
+    height: height(12),
+    width: width(100),
+    paddingTop: width(2),
+    paddingHorizontal: width(2),
+    paddingBottom: height(1.75),
     backgroundColor: "#05419A",
     alignItems: "flex-end",
     justifyContent: "space-between",
   },
   menu: {
-    width: 36,
-    height: 36,
+    height: height(4.5),
+    width: width(9),
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#05419A",
-    // Adicione margem se necessário para separação
-    // marginRight: 5,
   },
   conteinerPesquisa: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    flex: 1,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "white",
-    borderRadius: 25,
-    paddingRight: 6,
-    paddingLeft: 6,
-    height: 35,
+    flex: 0.8,
+    marginLeft: width(2),
+    marginRight: width(2),
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: font(3),
+    paddingRight: width(2),
+    paddingLeft: width(2),
+    height: height(4.5),
   },
-  title: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  Login: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    height: 35,
+  loginContainer: {
+    height: height(4.5),
+    fontSize: font(2),
     justifyContent: "center",
+  },
+  LoginButtonIcon: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: width(9),
+    height: height(4.5),
   },
   userName: {
     color: "white",
-    fontSize: 16,
+    fontSize: font(2),
   },
   searchInput: {
-    fontSize: 12,
-    flex: 1, // Permite que o input preencha o espaço
-    height: 30, // Adicionado para garantir que o input seja clicável
+    fontSize: font(2),
+    flex: 1,
+    height: height(4),
+    paddingVertical: 0,
   },
   cart: {
+    height: height(4.5),
     alignItems: "center",
     justifyContent: "center",
-    width: 36,
-    height: 36,
-    backgroundColor: "white",
-    borderRadius: 100,
-    marginLeft: 5, // Pequena margem para separação
-  },
-  textRegister: {
-    // Adicione estilos se necessário, pois não estão definidos no seu styles.Login
-    color: "#05419A",
-    fontWeight: "bold",
-    padding: 5,
-    fontSize: 12,
+    width: width(9),
+    marginRight: width(2),
   },
 });

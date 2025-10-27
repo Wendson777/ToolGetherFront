@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,13 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import Header from "../../Components/Header"; // Ajuste o caminho conforme sua estrutura
+import { Ionicons } from '@expo/vector-icons';
+import Header from "../../Components/Header";
 import { AntDesign } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
-// Função auxiliar de formatação de preço (necessária para exibir R$)
+import { height, width, font } from "../../utils/responsive";
+
 function formatarPreco(valor) {
   if (typeof valor !== "number" || isNaN(valor)) {
     const numero = parseFloat(valor);
@@ -27,24 +30,65 @@ function formatarPreco(valor) {
   }).format(valor);
 }
 
-// O componente recebe `route` para pegar os parâmetros e `navigation` para navegar
+const RatingStars = ({ rating, size = font(2.5), color = "#FFC400" }) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  const emptyStars = 5 - Math.ceil(rating);
+
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(
+      <Ionicons name="star" size={size} color={color} key={`full-${i}`}/>
+    );
+  }
+
+  if (hasHalfStar) {
+    stars.push(
+      <Ionicons name="star-half" size={size} color={color} key="half-star" />
+    );
+  }
+
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(
+      <AntDesign
+        name="staro"
+        size={size}
+        color={color}
+        key={`empty-${i}`}
+      />
+    );
+  }
+
+  return <View style={styles.ratingContainer}>{stars}</View>;
+};
+
 export default function Details({ route, navigation }) {
-  // 1. Recebe o objeto do produto da tela anterior (Home ou CategoryProducts)
   const { produto } = route.params;
 
-  // 2. Função para navegar para a tela de aluguel
+  const rating = produto.rating || 4.2;
+  const reviewsCount = produto.reviewsCount || 120;
+
+  const [isExpanded, setIsExpanded] = useState(false);
+  const DESCRIPTION_MAX_LINES = 4;
+
   function navigateToRentCheckout() {
     navigation.navigate("RentCheckout", {
-      product: produto, // Passa o objeto do produto
+      product: produto,
     });
   }
+
+  const descriptionText = produto.description || "Descrição não disponível.";
+  const showMoreButton = descriptionText.split('\n').length > DESCRIPTION_MAX_LINES || descriptionText.length > 200;
+
+  const toggleDescription = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header navigation={navigation} showBackButton={true} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Imagem Principal */}
         <View style={styles.imageContainer}>
           <Image
             source={{ uri: produto.url || "https://via.placeholder.com/300" }}
@@ -56,15 +100,40 @@ export default function Details({ route, navigation }) {
         <View style={styles.detailsContainer}>
           <Text style={styles.productName}>{produto.name}</Text>
 
+          <View style={styles.ratingRow}>
+            <RatingStars rating={rating} />
+            <Text style={styles.reviewCountText}>
+              ({reviewsCount} avaliações)
+            </Text>
+          </View>
+
+
           <View style={styles.priceContainer}>
             <Text style={styles.priceTag}>{formatarPreco(produto.price)}</Text>
             <Text style={styles.priceDuration}>/ dia</Text>
           </View>
 
           <Text style={styles.sectionTitle}>Descrição</Text>
-          <Text style={styles.descriptionText}>
-            {produto.description || "Descrição não disponível."}
+          <Text
+            style={styles.descriptionText}
+            numberOfLines={isExpanded ? undefined : DESCRIPTION_MAX_LINES}
+          >
+            {descriptionText}
           </Text>
+
+          {showMoreButton && (
+            <TouchableOpacity onPress={toggleDescription} style={styles.readMoreButton}>
+              <Text style={styles.readMoreText}>
+                {isExpanded ? "Ver Menos" : "Ver Mais"}
+              </Text>
+              <AntDesign
+                name={isExpanded ? "up" : "down"}
+                size={font(1.25)}
+                color="#2f2e2eff"
+                style={styles.readMoreIcon}
+              />
+            </TouchableOpacity>
+          )}
 
           <Text style={styles.sectionTitle}>Detalhes</Text>
           <View style={styles.infoRow}>
@@ -86,7 +155,7 @@ export default function Details({ route, navigation }) {
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.favoriteButton}>
-          <AntDesign name="hearto" size={24} color="#05419A" />
+          <Feather name="heart" size={font(4)} color="#05419A" />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -98,7 +167,7 @@ export default function Details({ route, navigation }) {
           disabled={produto.stock <= 0}
         >
           <Text style={styles.buttonText}>
-            {produto.stock > 0 ? "Alugar Agora" : "Esgotado"}
+            ALUGAR
           </Text>
         </TouchableOpacity>
       </View>
@@ -112,105 +181,134 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: height(2.5),
   },
   imageContainer: {
-    width: "100%",
-    height: 300,
+    width: width(100),
+    height: height(40),
     backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
   },
   mainImage: {
-    width: "90%",
-    height: "90%",
+    width: "100%",
+    height: "100%",
   },
   detailsContainer: {
-    padding: 20,
+    padding: width(5),
   },
   productName: {
-    fontSize: 28,
+    fontSize: font(3.5),
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 10,
+    marginBottom: height(0.5),
+  },
+  ratingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: height(1.5),
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    marginRight: width(2),
+  },
+  reviewCountText: {
+    fontSize: font(1.8),
+    color: "#666",
   },
   priceContainer: {
     flexDirection: "row",
     alignItems: "baseline",
-    marginBottom: 20,
+    marginBottom: height(2.5),
   },
   priceTag: {
-    fontSize: 32,
+    fontSize: font(4),
     fontWeight: "bold",
     color: "#FF6347",
   },
   priceDuration: {
-    fontSize: 18,
+    fontSize: font(2.2),
     color: "#666",
-    marginLeft: 5,
+    marginLeft: width(1),
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: font(2.5),
     fontWeight: "bold",
     color: "#05419A",
-    marginTop: 15,
-    marginBottom: 8,
+    marginTop: height(2),
+    marginBottom: height(1),
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
-    paddingBottom: 5,
+    paddingBottom: height(0.6),
   },
   descriptionText: {
-    fontSize: 16,
+    fontSize: font(2),
     color: "#444",
-    lineHeight: 24,
+    lineHeight: font(3),
+    textAlign: "justify",
+  },
+  readMoreButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: height(1),
+    marginBottom: height(1.5),
+  },
+  readMoreText: {
+    fontSize: font(2),
+    color: "#2f2e2eff",
+    fontWeight: "bold",
+    marginRight: width(1),
+  },
+  readMoreIcon: {
+    marginTop: 2,
   },
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 5,
+    paddingVertical: height(1),
     borderBottomWidth: 1,
     borderBottomColor: "#f5f5f5",
   },
   infoLabel: {
-    fontSize: 16,
+    fontSize: font(2),
     fontWeight: "600",
     color: "#666",
   },
   infoValue: {
-    fontSize: 16,
+    fontSize: font(2),
     color: "#333",
   },
   footer: {
     flexDirection: "row",
-    padding: 15,
+    padding: width(4),
     borderTopWidth: 1,
     borderTopColor: "#eee",
     backgroundColor: "#fff",
   },
   favoriteButton: {
-    width: 60,
-    height: 60,
+    width: width(15),
+    height: width(15),
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 30,
+    borderRadius: width(7.5),
     borderWidth: 1,
     borderColor: "#05419A",
-    marginRight: 10,
+    marginRight: width(2.5),
   },
   buyNowButton: {
     flex: 1,
     backgroundColor: "#05419A",
-    padding: 18,
-    borderRadius: 30,
+    padding: height(1),
+    borderRadius: width(7.5),
     justifyContent: "center",
     alignItems: "center",
   },
   disabledButton: {
-    backgroundColor: "#aaa", // Cor para botão desabilitado
+    backgroundColor: "#aaa",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: font(3),
     fontWeight: "bold",
   },
 });

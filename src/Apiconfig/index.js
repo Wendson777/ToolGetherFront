@@ -1,4 +1,4 @@
-const LOCAL_IP = "192.168.68.106";
+const LOCAL_IP = "10.0.0.136";
 
 const API_PORT = "3333";
 
