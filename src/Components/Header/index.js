@@ -67,7 +67,7 @@ export default function Header({ navigation, showBackButton = false }) {
 
       <View style={styles.cart}>
         <TouchableOpacity
-          onPress={() => navigation && navigation.navigate("Cart")}
+          onPress={() => navigation && navigation.navigate('Cart')}
         >
           <Feather name="shopping-cart" size={font(3.5)} color="#fff" />
         </TouchableOpacity>
