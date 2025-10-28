@@ -12,18 +12,17 @@ import {
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { height, width, font } from "../../utils/responsive";
 
 export default function Register() {
   const navigation = useNavigation();
 
-  // Estados para os inputs
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [adress, setAdress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  // Função para cadastrar usuário
   const handleRegister = async () => {
     try {
       const response = await fetch("http://192.168.1.24:3333/register", {
@@ -36,7 +35,7 @@ export default function Register() {
 
       if (response.ok) {
         Alert.alert("Sucesso", `Usuário criado: ${data.name}`);
-        navigation.navigate("Login"); // volta para tela de login
+        navigation.navigate("Login");
       } else {
         Alert.alert("Erro", data.message);
       }
@@ -104,16 +103,16 @@ export default function Register() {
 
         <View style={styles.containerSocial}>
           <Pressable style={styles.socialButton}>
-            <FontAwesome name="google" size={24} color="white" />
+            <FontAwesome name="google" size={font(3.6)} color="white" />
           </Pressable>
 
           <Pressable
             style={[
               styles.socialButton,
-              { backgroundColor: "#3b5998", marginLeft: 10 },
+              { backgroundColor: "#3b5998", marginLeft: width(10) },
             ]}
           >
-            <FontAwesome name="facebook" size={24} color="white" />
+            <FontAwesome name="facebook" size={font(3.6)} color="white" />
           </Pressable>
         </View>
       </View>
@@ -127,63 +126,64 @@ const styles = StyleSheet.create({
     backgroundColor: "#05419A",
     justifyContent: "flex-end",
   },
+  containerLogo: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: height(5),
+  },
+  logo: {
+    width: width(50),
+  },
   subContainer: {
     alignItems: "center",
     backgroundColor: "white",
-    borderRadius: 25,
+    borderRadius: height(3.5),
   },
   formTitle: {
-    fontSize: 30,
+    fontSize: font(4.5),
     color: "#05419A",
-    margin: 15,
+    margin: height(2.2),
   },
   containerInput: {
     alignItems: "center",
-    width: "100%",
-    gap: 15,
+    width: width(100),
+    gap: height(1.5),
   },
   formInput: {
     borderWidth: 1,
     borderColor: "#05419A",
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 5,
-    width: "90%",
-    fontSize: 20,
+    borderRadius: height(1.5),
+    padding: height(1.5),
+    marginVertical: height(0.5),
+    width: width(90),
+    fontSize: font(2.5),
   },
   formButton: {
     backgroundColor: "#05419A",
-    width: "90%",
-    margin: 10,
-    padding: 10,
-    borderRadius: 10,
+    width: width(90),
+    marginBottom: height(1.5),
+    padding: height(1.5),
+    borderRadius: height(1.5),
     alignItems: "center",
+    marginTop: height(2),
   },
   textButton: {
     color: "white",
-    fontSize: 22,
+    fontSize: font(3),
     fontWeight: "bold",
   },
   containerSocial: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 5,
-    marginBottom: "10%",
+    padding: height(0.7),
+    marginBottom: height(3),
   },
   socialButton: {
     backgroundColor: "#DB4437",
-    padding: 10,
-    borderRadius: 5,
+    padding: height(1.5),
+    borderRadius: height(0.7),
     justifyContent: "center",
     alignItems: "center",
-  },
-  containerLogo: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "5%",
-  },
-  logo: {
-    width: "35%",
   },
 });

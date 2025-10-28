@@ -12,6 +12,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
+import { width, height, font } from "../../utils/responsive";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ export default function Login({ navigation }) {
   async function handleLogin() {
     try {
       const emailTratado = email.trim().toLowerCase();
-      const response = await fetch("http://192.168.68.106:3333/login", {
+      const response = await fetch("http://10.0.0.136:3333/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,15 +34,12 @@ export default function Login({ navigation }) {
       if (response.ok) {
         console.log("Login OK:", data);
 
-        // Salvar o token
         await AsyncStorage.setItem("token", data.token);
 
-        // 💡 ALTERAÇÃO CRÍTICA: Salvar o ID do usuário retornado pelo backend
         if (data.userId) {
           await AsyncStorage.setItem("userId", data.userId);
         }
 
-        // Salvar o nome do usuário para exibição
         if (data.user) {
           await AsyncStorage.setItem("user", data.user);
           Alert.alert("Sucesso", `Bem-vindo ${data.user}!`);
@@ -106,19 +104,19 @@ export default function Login({ navigation }) {
           <TouchableOpacity style={styles.formButton} onPress={handleLogin}>
             <Text style={styles.textButoon}>Entrar</Text>
           </TouchableOpacity>
-          <Text style={{ textAlign: "center" }}>Acessar com</Text>
+          <Text style={{ textAlign: "center", fontSize: font(2.2) }}>Acessar com</Text>
           <View style={styles.containerSocial}>
             <Pressable style={styles.socialButton}>
-              <FontAwesome name="google" size={24} color="white" />
+              <FontAwesome name="google" size={font(3)} color="white" />
             </Pressable>
 
             <Pressable
               style={[
                 styles.socialButton,
-                { backgroundColor: "#3b5998", marginLeft: 10 },
+                { backgroundColor: "#3b5998", marginLeft: width(3) },
               ]}
             >
-              <FontAwesome name="facebook" size={24} color="white" />
+              <FontAwesome name="facebook" size={font(3)} color="white" />
             </Pressable>
           </View>
         </View>
@@ -131,85 +129,81 @@ const styles = StyleSheet.create({
   conteiner: {
     flex: 1,
     backgroundColor: "#05419A",
-    justifyContent: "flex-end",
   },
   conteinerLogo: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: height(8)
   },
   logo: {
-    width: "50%",
+    width: width(50), 
   },
   subConteiner: {
-    // flex: 1,
     backgroundColor: "#fff",
-    borderRadius: 25,
+    borderRadius: height(3.5),
   },
   conteiner1: {
     alignItems: "center",
     justifyContent: "flex-end",
-    // flex: 1,
   },
   conteiner2: {
     alignItems: "center",
-    // flex: 1,
-    paddingTop: 30,
+    paddingTop: height(2),
   },
   textTitle: {
-    fontSize: 30,
+    fontSize: font(4.0), 
     color: "#05419A",
-    margin: 15,
+    margin: height(2.2),
   },
   conteinerInput: {
     alignItems: "center",
-    width: "100%",
-    gap: 15,
+    width: width(100), 
+    gap: height(1.5),
   },
   formInput: {
-    borderWidth: 1, // largura da borda
-    borderColor: "#05419A", // cor da borda
-    borderRadius: 10, // bordas arredondadas (opcional)
-    padding: 10, // espaço interno
-    marginVertical: 5, // espaço entre os inputs
-    width: "90%",
-    fontSize: 20,
+    borderWidth: 1, 
+    borderColor: "#05419A", 
+    borderRadius: height(1.5),
+    padding: height(1.5),
+    marginVertical: height(0.7),
+    width: width(90), 
+    fontSize: font(2.5), 
   },
   formButton: {
     backgroundColor: "#05419A",
-    width: "90%",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 10,
+    width: width(90), 
+    marginBottom: height(1.5),
+    padding: height(1.5),
+    borderRadius: height(1.5),
     alignItems: "center",
   },
   textButoon: {
     color: "white",
-    fontSize: 22,
+    fontSize: font(3.0), 
     fontWeight: "bold",
   },
   containerSocial: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 5,
-    marginBottom: "10%",
+    padding: height(0.7),
+    marginBottom: height(3),
   },
   socialButton: {
-    backgroundColor: "#DB4437", // vermelho Google
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#DB4437",
+    padding: height(1.5),
+    borderRadius: height(0.7),
     justifyContent: "center",
     alignItems: "center",
   },
   Register: {
-    width: "100%",
+    width: width(100), 
     alignItems: "flex-end",
-    marginTop: 20,
-    paddingEnd: 20,
+    paddingEnd: width(5),
   },
   textRegister: {
     textDecorationLine: "underline",
     color: "#05419A",
-    fontSize: 16,
+    fontSize: font(2.0), 
   },
 });

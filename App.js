@@ -60,7 +60,7 @@ export default function App() {
           name="RentCheckout"
           component={RentCheckout}
         />
-      </Stack.Navigator>
+        </Stack.Navigator>
     </NavigationContainer>
   );
 }
