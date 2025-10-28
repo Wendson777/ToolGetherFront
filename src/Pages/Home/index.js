@@ -18,7 +18,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { AntDesign } from "@expo/vector-icons";
 
-const API_BASE_URL = "http://192.168.68.106:3333";
+const API_BASE_URL = "http://192.168.1.24:3333";
 const MY_API_URL = `${API_BASE_URL}/getproducts`;
 
 function formatarPreco(valor) {
