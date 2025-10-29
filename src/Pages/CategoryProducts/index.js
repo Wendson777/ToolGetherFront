@@ -28,7 +28,7 @@ function formatarPreco(valor) {
   }).format(valor);
 }
 
-const API_BASE_URL = "http://192.168.68.106:3333";
+const API_BASE_URL = "http://192.168.1.24:3333";
 
 export default function CategoryProducts({ route, navigation }) {
   const { categoryId, categoryName } = route.params;

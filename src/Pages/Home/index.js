@@ -17,6 +17,7 @@ import { height, width, font } from "../../utils/responsive";
 import { AntDesign } from "@expo/vector-icons";
 
 const API_BASE_URL = "http://10.0.0.136:3333";
+
 const MY_API_URL = `${API_BASE_URL}/getproducts`;
 
 function formatarPreco(valor) {
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
   },
   container3: {
     width: width(92),
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   productList: {
     flexDirection: "row",
@@ -395,25 +396,25 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: font(1.8),
-    color: '#333',
+    color: "#333",
     marginBottom: height(0.5),
   },
   ratingContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: height(1),
     left: width(2),
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     borderRadius: width(1),
     paddingHorizontal: width(1),
     paddingVertical: height(0.2),
     zIndex: 10,
   },
   ratingText: {
-    color: 'white',
+    color: "white",
     fontSize: font(1.6),
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: width(0.5),
-  }
+  },
 });
