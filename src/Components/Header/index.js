@@ -12,7 +12,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { DrawerActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { height, width, font } from "../../utils/responsive";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Header({ navigation, showBackButton = false }) {
   const [userName, setUserName] = useState(null);
@@ -67,9 +67,9 @@ export default function Header({ navigation, showBackButton = false }) {
 
       <View style={styles.cart}>
         <TouchableOpacity
-          onPress={() => navigation && navigation.navigate('Cart')}
+          onPress={() => navigation && navigation.navigate("Cart")}
         >
-          <Feather name="shopping-cart" size={font(3.5)} color="#fff" />
+          <AntDesign name="star" size={32} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>

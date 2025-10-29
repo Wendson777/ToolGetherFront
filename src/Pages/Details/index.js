@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import Header from "../../Components/Header";
 import { AntDesign } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
@@ -38,7 +38,7 @@ const RatingStars = ({ rating, size = font(2.5), color = "#FFC400" }) => {
 
   for (let i = 0; i < fullStars; i++) {
     stars.push(
-      <Ionicons name="star" size={size} color={color} key={`full-${i}`}/>
+      <Ionicons name="star" size={size} color={color} key={`full-${i}`} />
     );
   }
 
@@ -50,12 +50,7 @@ const RatingStars = ({ rating, size = font(2.5), color = "#FFC400" }) => {
 
   for (let i = 0; i < emptyStars; i++) {
     stars.push(
-      <AntDesign
-        name="staro"
-        size={size}
-        color={color}
-        key={`empty-${i}`}
-      />
+      <AntDesign name="staro" size={size} color={color} key={`empty-${i}`} />
     );
   }
 
@@ -78,7 +73,9 @@ export default function Details({ route, navigation }) {
   }
 
   const descriptionText = produto.description || "Descrição não disponível.";
-  const showMoreButton = descriptionText.split('\n').length > DESCRIPTION_MAX_LINES || descriptionText.length > 200;
+  const showMoreButton =
+    descriptionText.split("\n").length > DESCRIPTION_MAX_LINES ||
+    descriptionText.length > 200;
 
   const toggleDescription = () => {
     setIsExpanded(!isExpanded);
@@ -107,7 +104,6 @@ export default function Details({ route, navigation }) {
             </Text>
           </View>
 
-
           <View style={styles.priceContainer}>
             <Text style={styles.priceTag}>{formatarPreco(produto.price)}</Text>
             <Text style={styles.priceDuration}>/ dia</Text>
@@ -122,7 +118,10 @@ export default function Details({ route, navigation }) {
           </Text>
 
           {showMoreButton && (
-            <TouchableOpacity onPress={toggleDescription} style={styles.readMoreButton}>
+            <TouchableOpacity
+              onPress={toggleDescription}
+              style={styles.readMoreButton}
+            >
               <Text style={styles.readMoreText}>
                 {isExpanded ? "Ver Menos" : "Ver Mais"}
               </Text>
@@ -166,9 +165,7 @@ export default function Details({ route, navigation }) {
           onPress={navigateToRentCheckout}
           disabled={produto.stock <= 0}
         >
-          <Text style={styles.buttonText}>
-            ALUGAR
-          </Text>
+          <Text style={styles.buttonText}>ALUGAR</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

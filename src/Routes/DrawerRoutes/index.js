@@ -8,6 +8,7 @@ import { CommonActions } from "@react-navigation/native";
 import NotificationListScreen from "../../Pages/NotificationListScreen";
 import DrawerNotificationLabel from "../../Pages/DrawerNotificationLabel";
 import MyProducts from "../../Pages/MyProducts";
+import ProductRegistration from "../../Pages/ProductRegistration";
 
 const Drawer = createDrawerNavigator();
 
@@ -75,6 +76,16 @@ export default function DrawerRoutes() {
       <Drawer.Screen
         name="Meus Produtos"
         component={MyProducts}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="archive-outline" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="Cadastro de Produtos"
+        component={ProductRegistration}
         options={{
           drawerIcon: ({ color, size }) => (
             <Ionicons name="archive-outline" size={size} color={color} />
