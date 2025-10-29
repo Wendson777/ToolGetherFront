@@ -12,8 +12,8 @@ import {
 } from "react-native";
 import Header from "../../Components/Header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { height, width, font } from "../../utils/responsive";
 
-// URL base da sua API
 const API_BASE_URL = "http://192.168.68.106:3333";
 
 export default function ProfileEditScreen({ navigation }) {
@@ -31,23 +31,20 @@ export default function ProfileEditScreen({ navigation }) {
   async function fetchUserData() {
     setIsLoading(true);
     try {
-      // 1. Obter ID e Token
       const storedId = await AsyncStorage.getItem("userId");
       const storedToken = await AsyncStorage.getItem("token");
 
       if (!storedId || !storedToken) {
         Alert.alert("Erro", "Sessão expirada. Faça login novamente.");
-        // navigation.navigate('Login'); // Descomente para redirecionar
         return;
       }
 
       setUserId(storedId);
       setUserToken(storedToken);
 
-      // 2. Requisição GET para buscar os dados
       const response = await fetch(`${API_BASE_URL}/profile/${storedId}`, {
         headers: {
-          Authorization: `Bearer ${storedToken}`, // Use se a rota GET for protegida
+          Authorization: `Bearer ${storedToken}`,
         },
       });
 
@@ -78,12 +75,11 @@ export default function ProfileEditScreen({ navigation }) {
 
     setIsSaving(true);
     try {
-      // 3. Requisição PUT para atualizar os dados
       const response = await fetch(`${API_BASE_URL}/profile/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`, // Use se a rota PUT for protegida
+          Authorization: `Bearer ${userToken}`,
         },
         body: JSON.stringify({
           name: userData.name,
@@ -100,7 +96,6 @@ export default function ProfileEditScreen({ navigation }) {
 
       Alert.alert("Sucesso", "Seu perfil foi atualizado com sucesso!");
 
-      // Opcional: atualizar o nome do usuário no armazenamento local
       if (result.user.name) {
         await AsyncStorage.setItem("user", result.user.name);
       }
@@ -125,20 +120,18 @@ export default function ProfileEditScreen({ navigation }) {
     return (
       <View style={[styles.mainContainer, styles.loadingContainer]}>
         <ActivityIndicator size="large" color="#05419A" />
-        <Text style={{ marginTop: 10 }}>Carregando perfil...</Text>
+        <Text style={{ marginTop: height(1.5) }}>Carregando perfil...</Text>
       </View>
     );
   }
 
   return (
-    // 🚨 Container principal com a correção de layout
     <View style={styles.mainContainer}>
       <Header navigation={navigation} showBackButton={true} />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Meu Perfil</Text>
 
-        {/* Nome */}
         <Text style={styles.label}>Nome</Text>
         <TextInput
           style={styles.input}
@@ -147,7 +140,6 @@ export default function ProfileEditScreen({ navigation }) {
           placeholder="Seu nome completo"
         />
 
-        {/* Email (Não editável) */}
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={[styles.input, styles.disabledInput]}
@@ -156,7 +148,6 @@ export default function ProfileEditScreen({ navigation }) {
           placeholder="Seu email"
         />
 
-        {/* Endereço */}
         <Text style={styles.label}>Endereço</Text>
         <TextInput
           style={styles.input}
@@ -165,7 +156,6 @@ export default function ProfileEditScreen({ navigation }) {
           placeholder="Rua, Número, Bairro"
         />
 
-        {/* Telefone */}
         <Text style={styles.label}>Telefone</Text>
         <TextInput
           style={styles.input}
@@ -177,7 +167,6 @@ export default function ProfileEditScreen({ navigation }) {
           keyboardType="phone-pad"
         />
 
-        {/* Botão de Salvar */}
         <TouchableOpacity
           style={styles.saveButton}
           onPress={handleSave}
@@ -188,7 +177,6 @@ export default function ProfileEditScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        {/* Link para alterar senha */}
         <TouchableOpacity
           style={styles.linkButton}
           onPress={() =>
@@ -215,29 +203,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollContent: {
-    padding: 20,
+    padding: width(5),
   },
   title: {
-    fontSize: 28,
+    fontSize: font(4),
     fontWeight: "bold",
     color: "#05419A",
-    marginBottom: 30,
+    marginTop: height(2),
+    marginBottom: height(3),
     textAlign: "center",
   },
   label: {
-    fontSize: 16,
+    fontSize: font(2.25),
     fontWeight: "bold",
-    color: "#333",
-    marginTop: 15,
-    marginBottom: 5,
+    color: "#05419A",
+    marginTop: height(1.5),
+    marginBottom: height(0.5),
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
+    borderColor: "#05419A",
+    borderRadius: width(2),
+    padding: width(3),
+    fontSize: font(2.25),
     backgroundColor: "#fff",
+    height: height(6),
   },
   disabledInput: {
     backgroundColor: "#f0f0f0",
@@ -245,24 +235,24 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: "#05419A",
-    padding: 15,
-    borderRadius: 8,
-    marginTop: 30,
+    padding: height(2),
+    borderRadius: width(2),
+    marginTop: height(3),
     alignItems: "center",
   },
   saveButtonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: font(2.25),
     fontWeight: "bold",
   },
   linkButton: {
-    padding: 10,
-    marginTop: 20,
-    alignItems: "center",
+    padding: height(1),
+    marginTop: height(2),
+    alignItems: "flex-end",
   },
   linkButtonText: {
     color: "#FF6347",
-    fontSize: 16,
+    fontSize: font(2.25),
     textDecorationLine: "underline",
   },
 });
