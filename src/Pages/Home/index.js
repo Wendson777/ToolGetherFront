@@ -9,16 +9,13 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header";
-
-// Importações de Ícones
 import Octicons from "@expo/vector-icons/Octicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { height, width, font } from "../../utils/responsive"; // 👈 FUNÇÕES RESPONSIVAS
+import { height, width, font } from "../../utils/responsive";
 import { AntDesign } from "@expo/vector-icons";
 
-// --- FUNÇÕES DE LÓGICA (MANTIDAS) ---
 const API_BASE_URL = "http://10.0.0.136:3333";
 const MY_API_URL = `${API_BASE_URL}/getproducts`;
 
@@ -37,7 +34,7 @@ function formatarPreco(valor) {
     currency: "BRL",
   });
 
-  return formatter.format(valor).replace(/\s/g, ""); // Remove espaço após o R$
+  return formatter.format(valor).replace(/\s/g, "");
 }
 
 function getCategoryIcon(name) {
@@ -64,21 +61,20 @@ export default function Home({ navigation }) {
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  // Simulação de itens alugados para o layout
   const rentedItems = [
     {
       id: 1,
       name: "Betoneira 400l",
       price: 99.99,
       dates: "01/03/25 - 10/03/25",
-      image: "https://via.placeholder.com/60x60/F0D900/000000?text=B",
+      image: require('../../../assets/images/betoneira.jpg'),
     },
     {
       id: 2,
       name: "Bicicleta GTSM",
       price: 49.99,
       dates: "11/03/25 - 12/02/25",
-      image: "https://via.placeholder.com/60x60/999999/FFFFFF?text=B",
+      image: require('../../../assets/images/bicicleta.webp'),
     },
   ];
 
@@ -138,10 +134,9 @@ export default function Home({ navigation }) {
     navigation.navigate("Details", { produto: produto });
   }
 
-  // --- RENDERIZAÇÃO ---
   return (
     <View style={styles.mainContainer}>
-      <Header navigation={navigation} /> 
+      <Header navigation={navigation} />
 
       <ScrollView
         style={styles.scrollViewFlex}
@@ -162,9 +157,8 @@ export default function Home({ navigation }) {
                 key={cat._id}
                 style={[
                   styles.actionButton,
-                  // Adiciona um padding extra para o último item para não cortar a rolagem
                   index === categories.length - 1 && {
-                    paddingRight: width(4),
+                    paddingRight: width(4) + width(5),
                   },
                 ]}
                 onPress={() => navigateToCategory(cat._id, cat.name)}
@@ -172,8 +166,6 @@ export default function Home({ navigation }) {
                 <View style={styles.areaButton}>
                   {getCategoryIcon(cat.name)}
                 </View>
-                {/* O texto "Futebol" é o mais longo na imagem, 
-                    então o font(1.6) ajusta bem para duas linhas. */}
                 <Text style={styles.labelButton}>{cat.name}</Text>
               </TouchableOpacity>
             ))
@@ -181,7 +173,6 @@ export default function Home({ navigation }) {
         </ScrollView>
         <View style={styles.carrosselDivider} />
 
-        {/* ÚLTIMOS ITENS ALUGADOS */}
         <View style={styles.rentedItemsContainer}>
           <View style={styles.rentedHeader}>
             <Text style={styles.rentedTitle}>Últimos itens alugados</Text>
@@ -193,7 +184,7 @@ export default function Home({ navigation }) {
             {rentedItems.map((item) => (
               <View key={item.id} style={styles.rentedItem}>
                 <Image
-                  source={{ uri: item.image }}
+                  source={item.image}
                   style={styles.rentedImage}
                 />
                 <View style={styles.rentedDetails}>
@@ -208,7 +199,6 @@ export default function Home({ navigation }) {
           </View>
         </View>
 
-        {/* BASEADO NO QUE VOCÊ VIU */}
         <View style={styles.container3}>
           <Text style={styles.titleContainer3}>Baseado no que você viu</Text>
           {isError && (
@@ -221,7 +211,6 @@ export default function Home({ navigation }) {
             <Text style={{ fontSize: font(2) }}>Carregando produtos...</Text>
           ) : (
             <View style={styles.productList}>
-              {/* O map foi limitado a 4 itens para se assemelhar ao layout da imagem */}
               {products.slice(0, 4).map((item) => (
                 <TouchableOpacity
                   key={item._id}
@@ -229,12 +218,10 @@ export default function Home({ navigation }) {
                   onPress={() => mudarTela(item)}
                   activeOpacity={0.7}
                 >
-                  {/* Ícone de avaliação (Estrela) */}
                   <View style={styles.ratingContainer}>
                     <AntDesign name="star" size={font(1.5)} color="#FFC700" />
                     <Text style={styles.ratingText}>
-                      {/* Simulação de avaliação */}
-                      {item.rating || (item._id.charCodeAt(0) % 5) / 10 + 4.5} 
+                      {item.rating || (item._id.charCodeAt(0) % 5) / 10 + 4.5}
                     </Text>
                   </View>
 
@@ -247,7 +234,6 @@ export default function Home({ navigation }) {
                     <Text style={styles.text_preco}>
                       {formatarPreco(item.price)}
                     </Text>
-                    {/* Linha para garantir que o nome do produto não quebre o layout */}
                     <Text
                       style={styles.productName}
                       numberOfLines={1}
@@ -263,7 +249,6 @@ export default function Home({ navigation }) {
   );
 }
 
-// --- ESTILOS RESPONSIVOS ---
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -276,22 +261,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "#fff",
   },
-  
-  // ------------------------------------
-  // ESTILOS: CARROSSEL DE CATEGORIAS
-  // ------------------------------------
+
   carrossel: {
-    maxHeight: height(12), // Altura aproximada para 60px de ícone + 20px de texto
+    maxHeight: height(12),
     paddingVertical: height(1.5),
     paddingHorizontal: width(4),
   },
   actionButton: {
     alignItems: "center",
-    marginRight: width(7), // Espaçamento entre os ícones
+    marginRight: width(3),
+    paddingHorizontal: width(1),
   },
   areaButton: {
-    backgroundColor: "#ecf0ff", // Fundo mais claro para os ícones
-    height: width(12), // 60px em width(100)
+    backgroundColor: "#ecf0ff",
+    height: width(12),
     width: width(12),
     alignItems: "center",
     borderRadius: width(6),
@@ -301,8 +284,9 @@ const styles = StyleSheet.create({
     marginTop: height(0.5),
     textAlign: "center",
     fontWeight: "600",
-    fontSize: font(1.6), // Tamanho de fonte pequeno
-    width: width(12), // Fixa a largura para o texto quebrar corretamente
+    fontSize: font(1.5),
+    minWidth: width(12),
+    maxWidth: width(20),
   },
   carrosselDivider: {
     height: height(0.1),
@@ -311,13 +295,10 @@ const styles = StyleSheet.create({
     marginBottom: height(1.5),
   },
 
-  // ------------------------------------
-  // ESTILOS: ÚLTIMOS ITENS ALUGADOS
-  // ------------------------------------
   rentedItemsContainer: {
-    backgroundColor: "#f5f5f5", // Cor de fundo do bloco
+    backgroundColor: "#f5f5f5",
     width: width(92),
-    minHeight: height(25), // Altura mínima para dois itens
+    minHeight: height(25),
     borderRadius: width(4),
     alignSelf: "center",
     marginBottom: height(2),
@@ -347,11 +328,11 @@ const styles = StyleSheet.create({
     paddingVertical: height(1),
   },
   rentedImage: {
-    width: width(15), // 60px
+    width: width(15),
     height: width(15),
     borderRadius: width(1),
     marginRight: width(4),
-    backgroundColor: 'white', // Adiciona fundo para placeholder
+    backgroundColor: 'white',
   },
   rentedDetails: {
     flex: 1,
@@ -373,12 +354,9 @@ const styles = StyleSheet.create({
     color: "#666",
   },
 
-  // ------------------------------------
-  // ESTILOS: BASEADO NO QUE VOCÊ VIU (LISTA DE PRODUTOS)
-  // ------------------------------------
   titleContainer3: {
     color: "#05419A",
-    fontSize: font(2.5), // Tamanho para o título grande
+    fontSize: font(2.5),
     marginBottom: height(1.5),
     fontWeight: "bold",
   },
@@ -392,18 +370,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   productItem: {
-    width: width(44), // Garante dois itens por linha com espaçamento
+    width: width(44),
     backgroundColor: "#f9f9f9",
     borderRadius: width(2),
     marginBottom: height(2),
-    overflow: 'hidden', // Importante para o rating ficar no topo
+    overflow: 'hidden',
   },
   productImage: {
     width: '100%',
-    height: width(40), // Altura proporcional à largura do item
+    height: width(40),
     resizeMode: 'contain',
     marginBottom: height(1),
-    backgroundColor: 'white', // Fundo branco para a imagem
+    backgroundColor: 'white',
   },
   productTextContainer: {
     paddingHorizontal: width(2),
@@ -411,7 +389,7 @@ const styles = StyleSheet.create({
   },
   text_preco: {
     color: "#05419A",
-    fontSize: font(2.5), // Fonte grande para o preço
+    fontSize: font(2.5),
     fontWeight: "bold",
     marginVertical: height(0.5),
   },
@@ -430,7 +408,7 @@ const styles = StyleSheet.create({
     borderRadius: width(1),
     paddingHorizontal: width(1),
     paddingVertical: height(0.2),
-    zIndex: 10, // Garante que a estrela fique por cima da imagem
+    zIndex: 10,
   },
   ratingText: {
     color: 'white',
