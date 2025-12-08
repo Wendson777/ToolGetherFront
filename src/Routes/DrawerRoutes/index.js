@@ -7,14 +7,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
 import NotificationListScreen from "../../Pages/NotificationListScreen";
 import MyProducts from "../../Pages/MyProducts";
-<<<<<<< HEAD
 import ProductRegistration from "../../Pages/ProductRegistration";
-=======
 import Chats from "../../Pages/Chats";
 import { Text, TouchableOpacity } from "react-native";
 import { height, width, font } from "../../utils/responsive";
 import DrawerNotificationLabel from "../../Pages/DrawerNotificationLabel";
->>>>>>> 0c04d8c614253f23d3969d88f9357deba02d8320
 
 const Drawer = createDrawerNavigator();
 
@@ -28,7 +25,6 @@ function Logout({ navigation }) {
       try {
         await AsyncStorage.removeItem("user");
         await AsyncStorage.removeItem("token");
-
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -41,13 +37,11 @@ function Logout({ navigation }) {
     }
     doLogout();
   }, [navigation]);
-
   return null;
 }
 
 export default function DrawerRoutes() {
   const unreadCount = useTotalUnreadChats();
-
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -80,7 +74,6 @@ export default function DrawerRoutes() {
           drawerItemStyle: { height: height(0), overflow: "hidden" },
         }}
       />
-
       <Drawer.Screen
         name="Meu perfil"
         component={Userconfig}
@@ -95,47 +88,19 @@ export default function DrawerRoutes() {
         component={MyProducts}
         options={{
           drawerIcon: ({ color, size }) => (
-<<<<<<< HEAD
-            <Ionicons name="archive-outline" size={size} color={color} />
+            <Ionicons name="cube-outline" size={32} color={color} />
           ),
         }}
       />
-
       <Drawer.Screen
         name="Cadastro de Produtos"
         component={ProductRegistration}
         options={{
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="archive-outline" size={size} color={color} />
+            <Ionicons name="add-circle-outline" size={32} color={color} />
           ),
         }}
       />
-      {/* 🚨 NOVA ROTA DE CHATS E SOLICITAÇÕES */}
-      <Drawer.Screen
-        name="ChatsAndRequests"
-        component={NotificationListScreen}
-        options={{
-          // Ícone dinâmico: usa 'chatbubbles' se houver mensagens não lidas
-          drawerIcon: ({ color, size }) => (
-            <Ionicons
-              name={unreadCount > 0 ? "chatbubbles" : "chatbubbles-outline"}
-              size={size}
-              color={color}
-            />
-          ),
-          // Rótulo personalizado com a contagem de notificação (badge)
-          drawerLabel: ({ focused, color }) => (
-            <DrawerNotificationLabel
-              label="Chat"
-              // O count é passado internamente no componente para fins de estilização.
-            />
-=======
-            <Ionicons name="cube-outline" size={32} color={color} />
->>>>>>> 0c04d8c614253f23d3969d88f9357deba02d8320
-          ),
-        }}
-      />
-
       <Drawer.Screen
         name="Notificações"
         component={NotificationListScreen}
@@ -145,24 +110,26 @@ export default function DrawerRoutes() {
           ),
         }}
       />
-
       <Drawer.Screen
         name="ChatScreen"
         component={Chats}
         options={{
           drawerIcon: ({ color, size }) => (
             <Ionicons
-              name="chatbubbles-outline"
+              name={unreadCount > 0 ? "chatbubbles" : "chatbubbles-outline"}
               size={32}
               color={color}
             />
           ),
           drawerLabel: ({ focused, color }) => (
-            <DrawerNotificationLabel label="Chat" focused={focused} color={color} />
+            <DrawerNotificationLabel
+              label="Chat"
+              focused={focused}
+              color={color}
+            />
           ),
         }}
       />
-
       <Drawer.Screen
         name="LogoutFunction"
         component={Logout}
