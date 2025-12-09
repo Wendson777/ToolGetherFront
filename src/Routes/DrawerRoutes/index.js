@@ -7,14 +7,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
 import NotificationListScreen from "../../Pages/NotificationListScreen";
 import MyProducts from "../../Pages/MyProducts";
-<<<<<<< HEAD
+
 import ProductRegistration from "../../Pages/ProductRegistration";
-=======
+
 import Chats from "../../Pages/Chats";
 import { Text, TouchableOpacity } from "react-native";
 import { height, width, font } from "../../utils/responsive";
 import DrawerNotificationLabel from "../../Pages/DrawerNotificationLabel";
->>>>>>> 0c04d8c614253f23d3969d88f9357deba02d8320
 
 const Drawer = createDrawerNavigator();
 
@@ -95,7 +94,6 @@ export default function DrawerRoutes() {
         component={MyProducts}
         options={{
           drawerIcon: ({ color, size }) => (
-<<<<<<< HEAD
             <Ionicons name="archive-outline" size={size} color={color} />
           ),
         }}
@@ -129,9 +127,6 @@ export default function DrawerRoutes() {
               label="Chat"
               // O count é passado internamente no componente para fins de estilização.
             />
-=======
-            <Ionicons name="cube-outline" size={32} color={color} />
->>>>>>> 0c04d8c614253f23d3969d88f9357deba02d8320
           ),
         }}
       />
@@ -151,14 +146,14 @@ export default function DrawerRoutes() {
         component={Chats}
         options={{
           drawerIcon: ({ color, size }) => (
-            <Ionicons
-              name="chatbubbles-outline"
-              size={32}
-              color={color}
-            />
+            <Ionicons name="chatbubbles-outline" size={32} color={color} />
           ),
           drawerLabel: ({ focused, color }) => (
-            <DrawerNotificationLabel label="Chat" focused={focused} color={color} />
+            <DrawerNotificationLabel
+              label="Chat"
+              focused={focused}
+              color={color}
+            />
           ),
         }}
       />

@@ -21,7 +21,7 @@ export default function Login({ navigation }) {
   async function handleLogin() {
     try {
       const emailTratado = email.trim().toLowerCase();
-      const response = await fetch("http://10.0.0.136:3333/login", {
+      const response = await fetch("http://110.98.122.176:3333/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,9 @@ export default function Login({ navigation }) {
           <TouchableOpacity style={styles.formButton} onPress={handleLogin}>
             <Text style={styles.textButoon}>Entrar</Text>
           </TouchableOpacity>
-          <Text style={{ textAlign: "center", fontSize: font(2.2) }}>Acessar com</Text>
+          <Text style={{ textAlign: "center", fontSize: font(2.2) }}>
+            Acessar com
+          </Text>
           <View style={styles.containerSocial}>
             <Pressable style={styles.socialButton}>
               <FontAwesome name="google" size={font(3)} color="white" />
@@ -134,10 +136,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: height(8)
+    marginTop: height(8),
   },
   logo: {
-    width: width(50), 
+    width: width(50),
   },
   subConteiner: {
     backgroundColor: "#fff",
@@ -152,27 +154,27 @@ const styles = StyleSheet.create({
     paddingTop: height(2),
   },
   textTitle: {
-    fontSize: font(4.0), 
+    fontSize: font(4.0),
     color: "#05419A",
     margin: height(2.2),
   },
   conteinerInput: {
     alignItems: "center",
-    width: width(100), 
+    width: width(100),
     gap: height(1.5),
   },
   formInput: {
-    borderWidth: 1, 
-    borderColor: "#05419A", 
+    borderWidth: 1,
+    borderColor: "#05419A",
     borderRadius: height(1.5),
     padding: height(1.5),
     marginVertical: height(0.7),
-    width: width(90), 
-    fontSize: font(2.5), 
+    width: width(90),
+    fontSize: font(2.5),
   },
   formButton: {
     backgroundColor: "#05419A",
-    width: width(90), 
+    width: width(90),
     marginBottom: height(1.5),
     padding: height(1.5),
     borderRadius: height(1.5),
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
   },
   textButoon: {
     color: "white",
-    fontSize: font(3.0), 
+    fontSize: font(3.0),
     fontWeight: "bold",
   },
   containerSocial: {
@@ -197,13 +199,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   Register: {
-    width: width(100), 
+    width: width(100),
     alignItems: "flex-end",
     paddingEnd: width(5),
   },
   textRegister: {
     textDecorationLine: "underline",
     color: "#05419A",
-    fontSize: font(2.0), 
+    fontSize: font(2.0),
   },
 });

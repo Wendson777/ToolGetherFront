@@ -16,7 +16,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { height, width, font } from "../../utils/responsive";
 import { AntDesign } from "@expo/vector-icons";
 
-const API_BASE_URL = "http://10.0.0.136:3333";
+const API_BASE_URL = "http://192.168.0.101:3333";
 
 const MY_API_URL = `${API_BASE_URL}/getproducts`;
 

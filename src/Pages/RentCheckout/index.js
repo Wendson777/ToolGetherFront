@@ -29,7 +29,7 @@ function formatarPreco(valor) {
 }
 
 // 🚨 ATENÇÃO: Verifique se este é o IP correto da sua rede Wi-Fi!
-const API_BASE_URL = "http://192.168.68.106:3333";
+const API_BASE_URL = "http://10.98.122.176:3333";
 
 export default function RentCheckout({ route, navigation }) {
   const { product } = route.params;

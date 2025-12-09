@@ -14,7 +14,7 @@ import Header from "../../Components/Header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { height, width, font } from "../../utils/responsive";
 
-const API_BASE_URL = "http://192.168.68.106:3333";
+const API_BASE_URL = "http://10.98.122.176:3333";
 
 export default function ProfileEditScreen({ navigation }) {
   const [userData, setUserData] = useState({
